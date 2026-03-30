@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace SpeedBalatro
 {
@@ -14,15 +15,13 @@ namespace SpeedBalatro
         [SerializeField] private TextMeshProUGUI gameStateText;
 
         [Header("Hand Display")]
-        [SerializeField] private Transform handContainer;
+        [SerializeField] private GameObject handContainer;
         [SerializeField] private GameObject cardUIPrefab;
         [SerializeField] private Button submitHandButton;
-        [SerializeField] private float cardSpacing = 120f; // horizontal spacing in pixels between cards
 
         [Header("Game State UI")]
         [SerializeField] private GameObject gameOverMenu;
         [SerializeField] private GameObject victoryMenu;
-        [SerializeField] private Button restartButton;
 
         [Header("References")]
         [SerializeField] private GameManager gameManager;
@@ -47,7 +46,6 @@ namespace SpeedBalatro
             ScoreUpdatedEvent.OnScoreUpdated += UpdateScoreUI;
             TimerUpdatedEvent.OnTimerUpdated += UpdateTimerUI;
             NewHandDealtEvent.OnNewHandDealt += DisplayNewHand;
-            GameStateChangedEvent.OnGameStateChanged += UpdateGameState;
         }
 
         private void UnsubscribeFromEvents()
@@ -56,7 +54,6 @@ namespace SpeedBalatro
             ScoreUpdatedEvent.OnScoreUpdated -= UpdateScoreUI;
             TimerUpdatedEvent.OnTimerUpdated -= UpdateTimerUI;
             NewHandDealtEvent.OnNewHandDealt -= DisplayNewHand;
-            GameStateChangedEvent.OnGameStateChanged -= UpdateGameState;
         }
 
         private void InitializeUI()
@@ -78,12 +75,6 @@ namespace SpeedBalatro
                 submitHandButton.onClick.AddListener(SubmitSelectedCards);
                 submitHandButton.interactable = false;
             }
-
-            if (restartButton != null)
-            {
-                restartButton.onClick.AddListener(() => 
-                    new GameRestartEvent().Execute());
-            }
         }
 
         private void UpdateScoreUI(float newScore)
@@ -98,9 +89,9 @@ namespace SpeedBalatro
         {
             if (timeText != null)
             {
-                int minutes = Mathf.FloorToInt(timeRemaining / 60);
                 int seconds = Mathf.FloorToInt(timeRemaining % 60);
-                timeText.text = $"Time: {minutes:00}:{seconds:00}";
+                int millis = Mathf.FloorToInt(timeRemaining * 100 % 100);
+                timeText.text = $"Time: {seconds:00}:{millis:00}";
 
                 // Change color when time is running low
                 if (timeRemaining <= 10f)
@@ -126,61 +117,16 @@ namespace SpeedBalatro
             }
         }
 
-        private void UpdateGameState(string newState)
-        {
-            if (gameStateText != null)
-            {
-                gameStateText.text = newState;
-            }
-
-            // Handle game state changes
-            switch (newState)
-            {
-                case "Victory!":
-                    ShowVictoryMenu();
-                    break;
-                case "Time's Up!":
-                    ShowGameOverMenu();
-                    break;
-                case "Playing":
-                    HideAllMenus();
-                    break;
-                case "Get Ready!":
-                    HideAllMenus();
-                    break;
-            }
-        }
-
         private void DisplayNewHand(Card[] newHand)
         {
-            // Clear existing hand UI
             ClearHandUI();
 
-            // If a layout group is on the parent, disable it to use manual placement
-            if (handContainer != null)
-            {
-                var layoutGroup = handContainer.GetComponent<UnityEngine.UI.HorizontalLayoutGroup>();
-                if (layoutGroup != null)
-                    layoutGroup.enabled = false;
-            }
-
-            // Create new card UI elements with manual spacing
-            float startX = (newHand.Length - 1) * -0.5f * cardSpacing;
             for (int i = 0; i < newHand.Length; i++)
             {
-                GameObject cardUIObject = Instantiate(cardUIPrefab, handContainer);
+                GameObject cardUIObject = Instantiate(cardUIPrefab, handContainer.transform);
                 if (cardUIObject != null)
                 {
-                    // Keep uniform scale and set anchored position
-                    var cardRect = cardUIObject.GetComponent<RectTransform>();
-                    if (cardRect != null)
-                    {
-                        cardRect.localScale = Vector3.one;
-                        cardRect.anchoredPosition = new Vector2(startX + i * cardSpacing, 0f);
-                    }
-
-                    CardUI cardUI = cardUIObject.GetComponent<CardUI>();
-                    if (cardUI != null)
+                    if (cardUIObject.TryGetComponent<CardUI>(out var cardUI))
                     {
                         cardUI.SetupCard(newHand[i], OnCardClicked);
                         currentHandUI.Add(cardUI);
@@ -195,14 +141,14 @@ namespace SpeedBalatro
         {
             if (cardUI.IsSelected)
             {
-                // Deselect card
                 cardUI.SetSelected(false);
+                cardUI.transform.position += new Vector3(0, -20f, 0);
                 new CardDeselectedEvent(cardUI.GetCard()).Execute();
             }
             else
             {
-                // Select card
                 cardUI.SetSelected(true);
+                cardUI.transform.position += new Vector3(0, 20f, 0);
                 new CardSelectedEvent(cardUI.GetCard()).Execute();
             }
 
@@ -215,12 +161,12 @@ namespace SpeedBalatro
             {
                 int selectedCount = GetSelectedCardCount();
                 submitHandButton.interactable = selectedCount > 0;
-                
+
                 // Update button text
                 TextMeshProUGUI buttonText = submitHandButton.GetComponentInChildren<TextMeshProUGUI>();
                 if (buttonText != null)
                 {
-                    buttonText.text = selectedCount > 0 ? 
+                    buttonText.text = selectedCount > 0 ?
                         $"Submit Hand ({selectedCount})" : "Select Cards";
                 }
             }
@@ -239,7 +185,7 @@ namespace SpeedBalatro
         private void SubmitSelectedCards()
         {
             List<Card> selectedCards = new();
-            
+
             foreach (CardUI cardUI in currentHandUI)
             {
                 if (cardUI.IsSelected)

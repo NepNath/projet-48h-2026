@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using System;
+using UnityEngine.InputSystem;
 
 namespace SpeedBalatro
 {
-    public class CardUI : MonoBehaviour
+    public class CardUI : MonoBehaviour, IPointerClickHandler
     {
         [Header("UI Components")]
         [SerializeField] private Image cardImage;
@@ -26,39 +28,67 @@ namespace SpeedBalatro
             onCardClicked = clickCallback;
 
             UpdateCardDisplay();
-            SetupButton();
         }
 
         private void UpdateCardDisplay()
         {
             if (cardData == null) return;
 
-            // Set card image
             if (cardImage != null && cardData.cardSprite != null)
             {
                 cardImage.sprite = cardData.cardSprite;
                 cardImage.color = cardData.cardColor;
             }
 
-            // Set card name
             if (cardNameText != null)
             {
                 cardNameText.text = cardData.cardName;
             }
 
-            // Set card value
             if (valueText != null)
             {
                 valueText.text = cardData.GetValue().ToString("F0");
             }
         }
 
-        private void SetupButton()
+        public void OnPointerClick(PointerEventData eventData)
         {
-            if (cardButton != null)
+            onCardClicked?.Invoke(this);
+        }
+
+        private void Update()
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame)
             {
-                cardButton.onClick.RemoveAllListeners();
-                cardButton.onClick.AddListener(() => onCardClicked?.Invoke(this));
+                CheckCardClick();
+            }
+        }
+
+        // WORKAROUND: The project's InputSystem is configured with "Both" input modes
+        // (activeInputHandler: 1 in ProjectSettings). This causes the EventSystem's
+        // IPointerClickHandler to not receive click events properly, even though
+        // raycasts work correctly. Using InputSystem's Mouse API for click detection
+        // and manually invoking the callback bypasses this issue.
+        // 
+        // Alternative: Set activeInputHandler to 2 (InputSystem Only) in ProjectSettings,
+        // but this may break other parts of the game that rely on legacy Input.
+        private void CheckCardClick()
+        {
+            PointerEventData pointerData = new PointerEventData(EventSystem.current)
+            {
+                position = Mouse.current.position.ReadValue()
+            };
+
+            var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, raycastResults);
+
+            foreach (var result in raycastResults)
+            {
+                if (result.gameObject == gameObject)
+                {
+                    onCardClicked?.Invoke(this);
+                    break;
+                }
             }
         }
 
@@ -71,7 +101,6 @@ namespace SpeedBalatro
                 selectionHighlight.SetActive(isSelected);
             }
 
-            // Optional: Change card appearance when selected
             if (cardImage != null)
             {
                 cardImage.color = isSelected ? 

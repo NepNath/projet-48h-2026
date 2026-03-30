@@ -18,7 +18,6 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private bool gameActive = false;
     private bool isDragging = false;
     private Canvas canvas;
-
     void Start()
     {
         canvas = GetComponentInParent<Canvas>();
@@ -106,6 +105,11 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         gameActive = false;
         CancelInvoke();
         resultText.text = win ? "ACCESS GRANTED" : "ACCESS DENIED";
-        Invoke(nameof(StartGame), 2f);
+        Invoke(nameof(LoadNextScene), 0.5f);
+    }
+
+    void LoadNextScene()
+    {
+        TransitionManager.LoadScene(SceneFlow.CompleteMiniGame());
     }
 }

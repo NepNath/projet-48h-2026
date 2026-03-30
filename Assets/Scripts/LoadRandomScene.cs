@@ -1,18 +1,31 @@
-using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class ButtonManager : MonoBehaviour
+public class LoadRandomScene : MonoBehaviour
 {
-    public static string[] scenes = {};
+    [SerializeField] private string menuScene = SceneFlow.MainMenuScene;
 
-    public static void loadRandomScene()
+    public void loadScene()
     {
-        int randomIndex = Random.Range(0, scenes.Length);
-        SceneManager.LoadScene(scenes[randomIndex]);
+        loadRandomScene();
     }
 
-    public static void quitGame()
+    public void loadRandomScene()
+    {
+        TransitionManager.LoadScene(SceneFlow.StartRun());
+    }
+
+    public void quitGame()
     {
         Application.Quit();
     }
+
+    public void loadMenuScene()
+    {
+        SceneFlow.ResetRun();
+        TransitionManager.LoadScene(menuScene);
+    }
+}
+
+public class ButtonManager : LoadRandomScene
+{
 }

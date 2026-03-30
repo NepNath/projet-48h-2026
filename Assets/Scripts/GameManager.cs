@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 
 public class DigitCodeManager : MonoBehaviour
@@ -88,18 +87,26 @@ public class DigitCodeManager : MonoBehaviour
     void EndGame(bool win)
     {
         gameActive = false;
-        resultText.text = win ? "ggwpez" : $"u suck bozo";
+        resultText.text = win ? "ACCESS GRANTED" : "ACCESS DENIED";
+        StartCoroutine(LoadNextScene(win));
+    }
+
+    System.Collections.IEnumerator LoadNextScene(bool win)
+    {
+        yield return new WaitForSeconds(0.5f);
+        TransitionManager.LoadScene(SceneFlow.CompleteMiniGame());
     }
 
     void UpdateUI()
     {
         codeToTypeText.text = secretCode;
 
-     string display = "";
-      for (int i = 0; i < 4; i++)
-    {
-        display += (i < playerInput.Length) ? playerInput[i] + " " : "_ ";
+        string display = "";
+        for (int i = 0; i < 4; i++)
+        {
+            display += (i < playerInput.Length) ? playerInput[i] + " " : "_ ";
+        }
+
+        playerInputText.text = display.Trim();
     }
-    playerInputText.text = display.Trim();
-}
 }

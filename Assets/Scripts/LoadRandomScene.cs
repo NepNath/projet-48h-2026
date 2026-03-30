@@ -1,13 +1,18 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
-public class LoadRandomScene : MonoBehaviour
+public class ButtonManager : MonoBehaviour
 {
-    public string[] scenes = {};
+    public static string[] scenes = {};
 
-    public void loadScene()
+    public static void loadRandomScene()
     {
         int randomIndex = Random.Range(0, scenes.Length);
         SceneManager.LoadScene(scenes[randomIndex]);
+    }
+
+    public static void quitGame()
+    {
+        Application.Quit();
     }
 }

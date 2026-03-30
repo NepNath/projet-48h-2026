@@ -1,21 +1,37 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using SpeedBalatro;
 
-public class SpeedBalatro : MonoBehaviour
+namespace SpeedBalatro
 {
-    private Dictionary<string, Image> _speedBalatroDeck = new();
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public class GameManager : MonoBehaviour
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        [Header("Round Settings")]
+        public int targetScore;
+        public float roundTimeLimit;
+
+        [Header("Current Game State")]
+        public List<Card> currentHand = new();
+        public List<Card> selectedCards = new();
+
+        private int currentScore;
+        private float currentTime;
+        private bool gameActive;
+
+
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
+        {
+
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
     }
 }

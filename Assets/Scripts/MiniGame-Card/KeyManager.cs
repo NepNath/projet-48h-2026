@@ -11,6 +11,7 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     [Header("Settings")]
     public float successDistance = 50f;
+    public float timeLimit = 5f;
 
     private Vector2 startPosition;
     private float timeLeft;
@@ -21,14 +22,25 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     void Start()
     {
         canvas = GetComponentInParent<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogError("Canvas not found! KeyCardManager needs to be under a Canvas.");
+            return;
+        }
+        if (card == null || reader == null || resultText == null)
+        {
+            Debug.LogError("Missing UI references in KeyCardManager!");
+            return;
+        }
         startPosition = card.anchoredPosition;
         StartGame();
     }
 
     void StartGame()
     {
+        CancelInvoke();
         card.anchoredPosition = startPosition;
-        timeLeft = GameSettings.timeLimit;
+        timeLeft = timeLimit;
         gameActive = true;
         isDragging = false;
         resultText.text = "";
@@ -36,7 +48,7 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     void Update()
     {
-        if (!gameActive || !isDragging) return;
+        if (!gameActive) return;
 
         timeLeft -= Time.deltaTime;
 
@@ -54,7 +66,7 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (!gameActive) return;
+        if (!gameActive || canvas == null) return;
 
         Vector2 delta = eventData.delta / canvas.scaleFactor;
         card.anchoredPosition += new Vector2(delta.x, 0);
@@ -92,6 +104,7 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     void EndGame(bool win)
     {
         gameActive = false;
+        CancelInvoke();
         resultText.text = win ? "ACCESS GRANTED" : "ACCESS DENIED";
         Invoke(nameof(StartGame), 2f);
     }

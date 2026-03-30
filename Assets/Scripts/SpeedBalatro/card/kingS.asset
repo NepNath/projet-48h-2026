@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: kingS
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: king Spades
-  cardSprite: {fileID: 0}
+  cardSprite: {fileID: 5094249290038607176, guid: 2a9b91564f69f77419a5961d3211a55c, type: 3}
   cardId: 38
   suit: 3
   rank: 13

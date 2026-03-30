@@ -77,12 +77,19 @@ namespace SpeedBalatro
             var raycastResults = new System.Collections.Generic.List<RaycastResult>();
             EventSystem.current.RaycastAll(pointerData, raycastResults);
 
+            // Find the first (top-most) card in the raycast results
             foreach (var result in raycastResults)
             {
-                if (result.gameObject == gameObject)
+                CardUI cardUI = result.gameObject.GetComponent<CardUI>();
+                if (cardUI != null)
                 {
-                    onCardClicked?.Invoke(this);
-                    break;
+                    // Only trigger if this is the top-most card AND it's this card
+                    if (cardUI == this)
+                    {
+                        onCardClicked?.Invoke(this);
+                    }
+                    // Always break after finding the first card to ensure only top-most is selected
+                    return;
                 }
             }
         }
@@ -95,21 +102,20 @@ namespace SpeedBalatro
                 selectionHighlight.SetActive(isSelected);
             }
 
-            if (cardImage != null)
-            {
-                cardImage.color = isSelected ? Color.yellow : cardData.cardColor;
-            }
-
             // Visual feedback: move card up when selected, back to original when deselected
-            if (isSelected)
+            // Use anchoredPosition to stay consistent with the curve layout
+            RectTransform rectTransform = GetComponent<RectTransform>();
+            if (rectTransform != null)
             {
-                transform.position += new Vector3(0, 20, 0);
+                if (isSelected)
+                {
+                    rectTransform.anchoredPosition += new Vector2(0, 50);
+                }
+                else
+                {
+                    rectTransform.anchoredPosition += new Vector2(0, -50);
+                }
             }
-            else
-            {
-                transform.position -= new Vector3(0, 20, 0);
-            } 
-            
         }
 
         public Card GetCard()

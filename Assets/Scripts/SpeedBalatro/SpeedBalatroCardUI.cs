@@ -90,7 +90,6 @@ namespace SpeedBalatro
         public void SetSelected(bool selected)
         {
             isSelected = selected;
-
             if (selectionHighlight != null)
             {
                 selectionHighlight.SetActive(isSelected);

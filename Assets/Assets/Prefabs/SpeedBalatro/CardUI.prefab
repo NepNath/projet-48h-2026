@@ -11,7 +11,10 @@ GameObject:
   - component: {fileID: 5209639026608882407}
   - component: {fileID: 2638670625395926801}
   - component: {fileID: 3730409694181318847}
+<<<<<<< HEAD
   - component: {fileID: 7726109444119873928}
+=======
+>>>>>>> cc8381ddafa0cc342f045be8caebc833af442fab
   m_Layer: 5
   m_Name: CardUI
   m_TagString: Untagged
@@ -39,7 +42,11 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
+<<<<<<< HEAD
   m_SizeDelta: {x: 240, y: 360}
+=======
+  m_SizeDelta: {x: 120, y: 180}
+>>>>>>> cc8381ddafa0cc342f045be8caebc833af442fab
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2638670625395926801
 CanvasRenderer:
@@ -49,6 +56,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 314307970978652989}
   m_CullTransparentMesh: 1
+<<<<<<< HEAD
 --- !u!114 &9999999999999999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -79,6 +87,8 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+=======
+>>>>>>> cc8381ddafa0cc342f045be8caebc833af442fab
 --- !u!114 &3730409694181318847
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,6 +129,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
+<<<<<<< HEAD
   m_TargetGraphic: {fileID: 2176297018557795830}
   m_OnClick:
     m_PersistentCalls:
@@ -140,6 +151,12 @@ MonoBehaviour:
   valueText: {fileID: 0}
   cardButton: {fileID: 3730409694181318847}
   selectionHighlight: {fileID: 0}
+=======
+  m_TargetGraphic: {fileID: 0}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+>>>>>>> cc8381ddafa0cc342f045be8caebc833af442fab
 --- !u!1 &1938904233009772796
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +192,11 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
+<<<<<<< HEAD
   m_SizeDelta: {x: 0, y: 0}
+=======
+  m_SizeDelta: {x: -2, y: -2}
+>>>>>>> cc8381ddafa0cc342f045be8caebc833af442fab
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6032689512866259509
 CanvasRenderer:

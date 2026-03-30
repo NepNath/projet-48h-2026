@@ -201,7 +201,6 @@ namespace SpeedBalatro
         private void SubmitSelectedCards()
         {
             List<Card> selectedCards = new();
-
             foreach (CardUI cardUI in currentHandUI)
             {
                 if (cardUI.IsSelected)

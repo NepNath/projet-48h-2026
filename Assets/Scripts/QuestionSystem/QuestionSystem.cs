@@ -61,9 +61,8 @@ public class QuestionSystem : MonoBehaviour
         Random random = new();
         InitDict();
 
-        // Get random question
         List<int> questionKeys = new(_questions.Keys);
-        _currentQuestionId = questionKeys[random.Next(questionKeys.Count)]; // Fixed: removed -1
+        _currentQuestionId = questionKeys[random.Next(questionKeys.Count)]; 
         _questionTitle.text = _questions[_currentQuestionId];
 
         SpawnAnswerButtons(_currentQuestionId);
@@ -79,7 +78,6 @@ public class QuestionSystem : MonoBehaviour
 
         foreach (var answer in answersForQuestion)
         {
-            // Instantiate button as child of the answers container
             GameObject answerBtn = Instantiate(_answerBtnPrefab);
             RectTransform answerRect = answerBtn.GetComponent<RectTransform>();
             if (answerRect != null)
@@ -92,17 +90,14 @@ public class QuestionSystem : MonoBehaviour
                 answerBtn.transform.SetParent(_answersContainer, false);
             }
             
-            // Set button text
             TextMeshProUGUI buttonText = answerBtn.GetComponentInChildren<TextMeshProUGUI>();
             if (buttonText != null)
             {
                 buttonText.text = answer.answer;
             }
             
-            // Store reference
             _questionBtnObjects.Add(answerBtn);
             
-            // The prefab root may be a wrapper object, so search children too.
             Button button = answerBtn.GetComponentInChildren<Button>();
             if (button != null)
             {
@@ -112,7 +107,7 @@ public class QuestionSystem : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("No Button component found on answer prefab instance.");
+                Debug.LogAssertion("No Button component found on answer prefab instance.");
             }
         }
     }

@@ -132,7 +132,7 @@ public class QuestionSystem : MonoBehaviour
         foreach (var btnObj in _questionBtnObjects)
         {
             if (btnObj != null && btnObj != selectedButtonRoot)
-                HideButtonKeepLayout(btnObj);
+                HideButton(btnObj);
         }
 
         if (selectedAnswer.IsCorrect)
@@ -141,7 +141,7 @@ public class QuestionSystem : MonoBehaviour
             StartCoroutine(Lose());
     }
 
-    void HideButtonKeepLayout(GameObject buttonRoot)
+    void HideButton(GameObject buttonRoot)
     {
         CanvasGroup canvasGroup = buttonRoot.GetComponent<CanvasGroup>();
         if (canvasGroup == null)

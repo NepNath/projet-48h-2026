@@ -1,4 +1,8 @@
-public static class GameSettings
+using UnityEngine;
+
+public class GameSettings : MonoBehaviour
 {
-    public static float timeLimit = 5f;
+    public static int QuestionTimer = 15;
+    public static int MiniGameTimer = 7;
+    public static float MiniGameTimeLimit = 5f;
 }

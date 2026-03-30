@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-using SpeedBalatro;
-using UnityEngine.Rendering;
 using System.Collections;
 
 namespace SpeedBalatro
@@ -39,27 +36,29 @@ namespace SpeedBalatro
 
         private void SubscribeToEvents()
         {
-            CardSelectedEvent.OnCardSelected += HandleCardSelected;
-            CardDeselectedEvent.OnCardDeselected += HandleCardDeselected;
-            TimerExpiredEvent.OnTimerExpired += HandleTimerExpired;
-            GameRestartEvent.OnGameRestart += HandleGameRestart;
+            SpeedBalatroEvents.OnCardSelected += HandleCardSelected;
+            SpeedBalatroEvents.OnCardDeselected += HandleCardDeselected;
+            SpeedBalatroEvents.OnHandSubmitted += HandleHandSubmitted;
+            SpeedBalatroEvents.OnTimerExpired += HandleTimerExpired;
+            SpeedBalatroEvents.OnGameRestart += HandleGameRestart;
         }
 
-        private void Destroy()
+        private void OnDestroy()
         {
-            CardSelectedEvent.OnCardSelected -= HandleCardSelected;
-            CardDeselectedEvent.OnCardDeselected -= HandleCardDeselected;
-            TimerExpiredEvent.OnTimerExpired -= HandleTimerExpired;
-            GameRestartEvent.OnGameRestart -= HandleGameRestart;
+            SpeedBalatroEvents.OnCardSelected -= HandleCardSelected;
+            SpeedBalatroEvents.OnCardDeselected -= HandleCardDeselected;
+            SpeedBalatroEvents.OnHandSubmitted -= HandleHandSubmitted;
+            SpeedBalatroEvents.OnTimerExpired -= HandleTimerExpired;
+            SpeedBalatroEvents.OnGameRestart -= HandleGameRestart;
         }
 
         private void UpdateTimer()
         {
             currentTime -= Time.deltaTime;
-            new TimerUpdatedEvent(currentTime).Execute();
+            SpeedBalatroEvents.RaiseTimerUpdated(currentTime);
             if (currentTime <= 0)
             {
-                new TimerExpiredEvent().Execute();
+                SpeedBalatroEvents.RaiseTimerExpired();
             }
         }
 
@@ -79,8 +78,8 @@ namespace SpeedBalatro
             currentTime = roundTimeLimit;
             gameActive = true;
 
-            new ScoreUpdatedEvent(currentScore).Execute();
-            new GameStateChangedEvent("Get Ready!").Execute();
+            SpeedBalatroEvents.RaiseScoreUpdated(currentScore);
+            SpeedBalatroEvents.RaiseGameStateChanged("Get Ready!");
 
             // Small delay before dealing first hand
             StartCoroutine(DelayedStart());
@@ -104,25 +103,29 @@ namespace SpeedBalatro
             float handScore = CalculateHandScore(cards);
             currentScore += handScore;
 
-            new ScoreUpdatedEvent(currentScore).Execute();
+            SpeedBalatroEvents.RaiseScoreUpdated(currentScore);
 
             // Check win condition
             if (currentScore >= targetScore)
             {
                 gameActive = false;
-                new GameStateChangedEvent("Victory!").Execute();
+                SpeedBalatroEvents.RaiseGameStateChanged("Victory!");
                 return;
             }
+
+            selectedCards.Clear();
+            DealNewHand();
         }
 
         private void HandleTimerExpired()
         {
             gameActive = false;
-            new GameStateChangedEvent("Time's Up!").Execute();
+            SpeedBalatroEvents.RaiseGameStateChanged("Time's Up!");
         }
 
         private void HandleGameRestart()
         {
+            dealtHandKeys.Clear();
             InitializeGame();
         }
 
@@ -158,7 +161,7 @@ namespace SpeedBalatro
             Card[] newHand = DealCards(5);
             currentHand = new List<Card>(newHand);
             selectedCards.Clear();
-            new NewHandDealtEvent(newHand).Execute();
+            SpeedBalatroEvents.RaiseNewHandDealt(newHand);
         }
 
         private Card[] DealCards(int amount)
@@ -181,7 +184,6 @@ namespace SpeedBalatro
 
             if (amount > uniqueCards.Count)
             {
-                Debug.LogWarning($"Requested {amount} cards but only {uniqueCards.Count} unique cards are available.");
                 amount = uniqueCards.Count;
             }
 
@@ -232,7 +234,7 @@ namespace SpeedBalatro
         private IEnumerator DelayedStart()
         {
             yield return new WaitForSeconds(1f);
-            new GameStateChangedEvent("Playing").Execute();
+            SpeedBalatroEvents.RaiseGameStateChanged("Playing");
             DealNewHand();
         }
 

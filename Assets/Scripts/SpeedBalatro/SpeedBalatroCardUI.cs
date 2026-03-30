@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
-using System;
 using UnityEngine.InputSystem;
 
 namespace SpeedBalatro
@@ -13,12 +12,12 @@ namespace SpeedBalatro
         [SerializeField] private Image cardImage;
         [SerializeField] private TextMeshProUGUI cardNameText;
         [SerializeField] private TextMeshProUGUI valueText;
-        [SerializeField] private Button cardButton;
         [SerializeField] private GameObject selectionHighlight;
 
         private Card cardData;
         private bool isSelected;
         private System.Action<CardUI> onCardClicked;
+        private Vector3 originalPosition;
 
         public bool IsSelected => isSelected;
 
@@ -26,7 +25,6 @@ namespace SpeedBalatro
         {
             cardData = card;
             onCardClicked = clickCallback;
-
             UpdateCardDisplay();
         }
 
@@ -53,30 +51,27 @@ namespace SpeedBalatro
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            // Fallback - also respond to EventSystem clicks if they work
             onCardClicked?.Invoke(this);
         }
 
         private void Update()
         {
-            if (Mouse.current.leftButton.wasPressedThisFrame)
+            // Manual click detection using Input System (bypasses EventSystem issues)
+            if (Mouse.current?.leftButton.wasPressedThisFrame == true)
             {
                 CheckCardClick();
             }
         }
 
-        // WORKAROUND: The project's InputSystem is configured with "Both" input modes
-        // (activeInputHandler: 1 in ProjectSettings). This causes the EventSystem's
-        // IPointerClickHandler to not receive click events properly, even though
-        // raycasts work correctly. Using InputSystem's Mouse API for click detection
-        // and manually invoking the callback bypasses this issue.
-        // 
-        // Alternative: Set activeInputHandler to 2 (InputSystem Only) in ProjectSettings,
-        // but this may break other parts of the game that rely on legacy Input.
         private void CheckCardClick()
         {
+            // Use Input System to get mouse position
+            Vector2 mousePosition = Mouse.current.position.ReadValue();
+
             PointerEventData pointerData = new PointerEventData(EventSystem.current)
             {
-                position = Mouse.current.position.ReadValue()
+                position = mousePosition
             };
 
             var raycastResults = new System.Collections.Generic.List<RaycastResult>();
@@ -95,7 +90,7 @@ namespace SpeedBalatro
         public void SetSelected(bool selected)
         {
             isSelected = selected;
-            
+
             if (selectionHighlight != null)
             {
                 selectionHighlight.SetActive(isSelected);
@@ -103,9 +98,19 @@ namespace SpeedBalatro
 
             if (cardImage != null)
             {
-                cardImage.color = isSelected ? 
-                    Color.yellow : cardData.cardColor;
+                cardImage.color = isSelected ? Color.yellow : cardData.cardColor;
             }
+
+            // Visual feedback: move card up when selected, back to original when deselected
+            if (isSelected)
+            {
+                transform.position += new Vector3(0, 20, 0);
+            }
+            else
+            {
+                transform.position -= new Vector3(0, 20, 0);
+            } 
+            
         }
 
         public Card GetCard()

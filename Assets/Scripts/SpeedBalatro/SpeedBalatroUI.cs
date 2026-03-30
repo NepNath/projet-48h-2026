@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 
 namespace SpeedBalatro
 {
@@ -42,18 +41,18 @@ namespace SpeedBalatro
 
         private void SubscribeToEvents()
         {
-            // Subscribe to GameManager events
-            ScoreUpdatedEvent.OnScoreUpdated += UpdateScoreUI;
-            TimerUpdatedEvent.OnTimerUpdated += UpdateTimerUI;
-            NewHandDealtEvent.OnNewHandDealt += DisplayNewHand;
+            SpeedBalatroEvents.OnScoreUpdated += UpdateScoreUI;
+            SpeedBalatroEvents.OnTimerUpdated += UpdateTimerUI;
+            SpeedBalatroEvents.OnNewHandDealt += DisplayNewHand;
+            SpeedBalatroEvents.OnGameStateChanged += HandleGameStateChanged;
         }
 
         private void UnsubscribeFromEvents()
         {
-            // Unsubscribe from GameManager events
-            ScoreUpdatedEvent.OnScoreUpdated -= UpdateScoreUI;
-            TimerUpdatedEvent.OnTimerUpdated -= UpdateTimerUI;
-            NewHandDealtEvent.OnNewHandDealt -= DisplayNewHand;
+            SpeedBalatroEvents.OnScoreUpdated -= UpdateScoreUI;
+            SpeedBalatroEvents.OnTimerUpdated -= UpdateTimerUI;
+            SpeedBalatroEvents.OnNewHandDealt -= DisplayNewHand;
+            SpeedBalatroEvents.OnGameStateChanged -= HandleGameStateChanged;
         }
 
         private void InitializeUI()
@@ -63,7 +62,6 @@ namespace SpeedBalatro
                 UpdateTargetScoreUI(gameManager.GetTargetScore());
             }
 
-            // Hide menus initially
             if (gameOverMenu != null) gameOverMenu.SetActive(false);
             if (victoryMenu != null) victoryMenu.SetActive(false);
         }
@@ -93,7 +91,6 @@ namespace SpeedBalatro
                 int millis = Mathf.FloorToInt(timeRemaining * 100 % 100);
                 timeText.text = $"Time: {seconds:00}:{millis:00}";
 
-                // Change color when time is running low
                 if (timeRemaining <= 10f)
                 {
                     timeText.color = Color.red;
@@ -114,6 +111,27 @@ namespace SpeedBalatro
             if (targetScoreText != null)
             {
                 targetScoreText.text = $"Target: {targetScore:N0}";
+            }
+        }
+
+        private void HandleGameStateChanged(string state)
+        {
+            if (gameStateText != null)
+            {
+                gameStateText.text = state;
+            }
+
+            switch (state)
+            {
+                case "Victory!":
+                    ShowVictoryMenu();
+                    break;
+                case "Time's Up!":
+                    ShowGameOverMenu();
+                    break;
+                case "Playing":
+                    HideAllMenus();
+                    break;
             }
         }
 
@@ -139,17 +157,16 @@ namespace SpeedBalatro
 
         private void OnCardClicked(CardUI cardUI)
         {
-            if (cardUI.IsSelected)
+            bool willBeSelected = !cardUI.IsSelected;
+            cardUI.SetSelected(willBeSelected);
+
+            if (willBeSelected)
             {
-                cardUI.SetSelected(false);
-                cardUI.transform.position += new Vector3(0, -20f, 0);
-                new CardDeselectedEvent(cardUI.GetCard()).Execute();
+                SpeedBalatroEvents.RaiseCardSelected(cardUI.GetCard());
             }
             else
             {
-                cardUI.SetSelected(true);
-                cardUI.transform.position += new Vector3(0, 20f, 0);
-                new CardSelectedEvent(cardUI.GetCard()).Execute();
+                SpeedBalatroEvents.RaiseCardDeselected(cardUI.GetCard());
             }
 
             UpdateSubmitButtonState();
@@ -162,7 +179,6 @@ namespace SpeedBalatro
                 int selectedCount = GetSelectedCardCount();
                 submitHandButton.interactable = selectedCount > 0;
 
-                // Update button text
                 TextMeshProUGUI buttonText = submitHandButton.GetComponentInChildren<TextMeshProUGUI>();
                 if (buttonText != null)
                 {
@@ -196,7 +212,7 @@ namespace SpeedBalatro
 
             if (selectedCards.Count > 0)
             {
-                new HandSubmittedEvent(selectedCards.ToArray()).Execute();
+                SpeedBalatroEvents.RaiseHandSubmitted(selectedCards.ToArray());
             }
         }
 

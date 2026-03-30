@@ -77,6 +77,12 @@ public class DigitCodeManager : MonoBehaviour
         {
             EndGame(true);
         }
+        else
+        {
+            resultText.text = "NOPE";
+            playerInput = "";
+            UpdateUI();
+        }
     }
 
     void EndGame(bool win)
@@ -85,12 +91,12 @@ public class DigitCodeManager : MonoBehaviour
         resultText.text = win ? "ggwpez" : $"u suck bozo";
     }
 
-void UpdateUI()
-{
-    codeToTypeText.text = secretCode;
+    void UpdateUI()
+    {
+        codeToTypeText.text = secretCode;
 
-    string display = "";
-    for (int i = 0; i < 4; i++)
+     string display = "";
+      for (int i = 0; i < 4; i++)
     {
         display += (i < playerInput.Length) ? playerInput[i] + " " : "_ ";
     }

@@ -1,12 +1,9 @@
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine.UI;
 using Random = System.Random;
 using System.Collections;
-using Unity.VectorGraphics;
-using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class QuestionEntry
@@ -32,6 +29,7 @@ public class QuestionSystem : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI _questionTitle;
+    [SerializeField] private TextMeshProUGUI _resultText;
     [SerializeField] private GameObject _answerBtnPrefab;
     [SerializeField] private Transform _answersContainer; // Parent container for buttons
 
@@ -53,7 +51,7 @@ public class QuestionSystem : MonoBehaviour
                 _answersByQuestionId[entry.id] = new List<AnswerEntry>();
             _answersByQuestionId[entry.id].Add(entry);
         }
-        _questionBtnObjects = new List<GameObject>(); // Keep track of instantiated buttons for cleanup and if you want to add functionality like disabling them after selection
+        _questionBtnObjects = new List<GameObject>();
     }
 
     void Start()
@@ -101,8 +99,8 @@ public class QuestionSystem : MonoBehaviour
             Button button = answerBtn.GetComponentInChildren<Button>();
             if (button != null)
             {
-                AnswerEntry selectedAnswer = answer; // Capture for closure
-                GameObject selectedButtonRoot = answerBtn; // Capture for closure
+                AnswerEntry selectedAnswer = answer;
+                GameObject selectedButtonRoot = answerBtn;
                 button.onClick.AddListener(() => OnAnswerClicked(selectedAnswer, button, selectedButtonRoot));
             }
             else
@@ -131,9 +129,9 @@ public class QuestionSystem : MonoBehaviour
         }
 
         if (selectedAnswer.IsCorrect)
-            StartCoroutine(Victory());
+            StartCoroutine(Transition(true));
         else
-            StartCoroutine(Lose());
+            StartCoroutine(Transition(false));
     }
 
     void HideButton(GameObject buttonRoot)
@@ -151,25 +149,19 @@ public class QuestionSystem : MonoBehaviour
             button.interactable = false;
     }
 
-    IEnumerator Victory()
+    IEnumerator Transition(bool correct)
     {
-        Debug.LogWarning("Victory! Loading next scene...");
-        yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene("DO NOT EDIT"); // Replace with your actual scene name
-    }
-
-    IEnumerator Lose()
-    {
-        yield return new WaitForSeconds(2f);
-        Debug.LogWarning("Defeat! Loading next scene...");
-        SceneManager.LoadScene("DO NOT EDIT"); // Replace with your actual scene name
+        if (_resultText != null)
+            _resultText.text = correct ? "Bonne reponse" : "Mauvaise reponse";
+        yield return new WaitForSeconds(0.5f);
+        TransitionManager.LoadScene(SceneFlow.CompleteQuiz(correct));
     }
     void OnDestroy()
     {
         foreach (var btnObj in _questionBtnObjects)
         {
             if (btnObj != null)
-                DestroyImmediate(btnObj);
+                Destroy(btnObj);
         }
         _questionBtnObjects.Clear();
     }

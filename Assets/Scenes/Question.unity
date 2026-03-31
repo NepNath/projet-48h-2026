@@ -1171,10 +1171,10 @@ MonoBehaviour:
     IsCorrect: 1
   - id: 36
     answer: "la mer m\xE9diterran\xE9e "
-    IsCorrect: 1
+    IsCorrect: 0
   - id: 36
     answer: la mer caspienne
-    IsCorrect: 1
+    IsCorrect: 0
   - id: 36
     answer: 'la mer morte '
     IsCorrect: 1
@@ -1196,15 +1196,12 @@ MonoBehaviour:
   - id: 38
     answer: Annecy
     IsCorrect: 0
-  - id: 38
-    answer: Annecy
-    IsCorrect: 0
   - id: 39
     answer: 15
     IsCorrect: 0
   - id: 39
     answer: 50
-    IsCorrect: 0
+    IsCorrect: 1
   - id: 39
     answer: 51
     IsCorrect: 0
@@ -1222,7 +1219,7 @@ MonoBehaviour:
     IsCorrect: 0
   - id: 41
     answer: "Troms\xF8"
-    IsCorrect: 0
+    IsCorrect: 1
   - id: 41
     answer: Sapporo
     IsCorrect: 0
@@ -1230,11 +1227,14 @@ MonoBehaviour:
     answer: Kashyyk
     IsCorrect: 0
   - id: 42
+    answer: Eswatini
+    IsCorrect: 1
+  - id: 42
     answer: Eberhard
     IsCorrect: 0
   - id: 43
     answer: Hongrie
-    IsCorrect: 0
+    IsCorrect: 1
   - id: 43
     answer: Serbie
     IsCorrect: 0
@@ -1252,7 +1252,7 @@ MonoBehaviour:
     IsCorrect: 0
   - id: 45
     answer: Suisse
-    IsCorrect: 0
+    IsCorrect: 1
   - id: 45
     answer: Espagne
     IsCorrect: 0

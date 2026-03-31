@@ -1,17 +1,18 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro; // <--- OBLIGATOIRE : Ajoute ça en haut !
 
 public class GestionnaireChoco : MonoBehaviour
 {
     [Header("Chocolat")]
     public Image imageDuBouton; 
+    public Image BatonChocolatImage; 
     public List<Sprite> etapesChocolat;
     private int indexActuel = 0;
 
-    [Header("Timer Visuel")]
-    public Image imageAfficheTimer;
-    public List<Sprite> spritesTimer;
+    [Header("Timer Texte")]
+    public TextMeshProUGUI texteTimer; // On utilise le composant Pro
     public float tempsTotal = 10f; 
     private float tempsRestant;
     private bool jeuFini = false;
@@ -27,30 +28,17 @@ public class GestionnaireChoco : MonoBehaviour
         if (!jeuFini && tempsRestant > 0)
         {
             tempsRestant -= Time.deltaTime;
-            GererVisuelTimer(); 
+            
+            if (texteTimer != null)
+            {
+                // "f1" pour n'avoir qu'un chiffre après la virgule
+                texteTimer.text = tempsRestant.ToString("f1") + "s";
+            }
 
             if (tempsRestant <= 0)
             {
                 TerminerJeu();
             }
-        }
-    }
-
-    void GererVisuelTimer()
-    {
-        // Sécurité : on vérifie qu'on a bien 3 sprites dans la liste
-        if (spritesTimer == null || spritesTimer.Count < 3) return;
-
-        float pourcentage = tempsRestant / tempsTotal;
-
-        if (pourcentage > 0.66f) {
-            imageAfficheTimer.sprite = spritesTimer[0];
-        }
-        else if (pourcentage > 0.33f) {
-            imageAfficheTimer.sprite = spritesTimer[1];
-        }
-        else {
-            imageAfficheTimer.sprite = spritesTimer[2];
         }
     }
 
@@ -65,7 +53,6 @@ public class GestionnaireChoco : MonoBehaviour
         }
         else
         {
-            Debug.Log("Victoire !");
             jeuFini = true;
             Die();
         }
@@ -74,16 +61,16 @@ public class GestionnaireChoco : MonoBehaviour
     void TerminerJeu()
     {
         jeuFini = true;
+        if (texteTimer != null) texteTimer.text = "0.0s";
         Time.timeScale = 0f; 
-        Debug.Log("GAME OVER");
     }
 
-void Die()
+    void Die()
     {
-        // Désactive l'objet qui porte l'image du bouton
         if (imageDuBouton != null) 
         {
             imageDuBouton.gameObject.SetActive(false);
+            BatonChocolatImage.gameObject.SetActive(false);
         }
     }
 }

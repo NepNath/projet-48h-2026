@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -37,7 +36,9 @@ public class RandomAppleSpawner : MonoBehaviour
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
+#if UNITY_EDITOR
         UnityEditor.Handles.color = Color.green;
         UnityEditor.Handles.DrawWireDisc(transform.position, Vector3.forward, radius);
+#endif
     }
 }

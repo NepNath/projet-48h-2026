@@ -4,15 +4,30 @@ public class ItemZoneDetector : MonoBehaviour
 {
     public int applesInBasket;
     private Collider2D basketCollider;
+    private bool finished;
+
+    [Header("Settings")]
+    public float timeLimit = 5f;
+    private float timeLeft;
 
     void Start()
     {
         applesInBasket = 0;
         basketCollider = GetComponent<Collider2D>();
+        timeLeft = timeLimit;
     }
     
     void Update()
     {
+        if (finished) return;
+
+        timeLeft -= Time.deltaTime;
+        if (timeLeft <= 0f)
+        {
+            Finish(false);
+            return;
+        }
+
         Collider2D[] hits = Physics2D.OverlapBoxAll(
             transform.position,
             basketCollider.bounds.size,
@@ -28,7 +43,14 @@ public class ItemZoneDetector : MonoBehaviour
 
         if (applesInBasket >= RandomAppleSpawner.MaxAppleForGoal)
         {
-            Debug.Log("Player Won");
+            Finish(true);
         }
+    }
+
+    void Finish(bool win)
+    {
+        if (finished) return;
+        finished = true;
+        TransitionManager.LoadScene(SceneFlow.CompleteMiniGame());
     }
 }

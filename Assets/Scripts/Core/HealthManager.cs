@@ -56,6 +56,6 @@ public class HealthManager : MonoBehaviour
     private void GameOver()
     {
         SceneFlow.ResetRun();
-        TransitionManager.LoadScene(SceneFlow.MainMenuScene);
+        TransitionManager.LoadScene(SceneFlow.GameOverScene);
     }
 }

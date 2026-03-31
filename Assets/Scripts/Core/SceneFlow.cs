@@ -4,6 +4,7 @@ public static class SceneFlow
 {
     public const string MainMenuScene = "MainMenu";
     public const string QuestionScene = "Question";
+    public const string GameOverScene = "GameOver";
 
     static readonly string[] MiniGameScenes = { "KeyCard", "DigitCode" };
     static int nextMiniGameIndex;

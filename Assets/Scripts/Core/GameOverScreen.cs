@@ -11,7 +11,7 @@ public class GameOverScreen : MonoBehaviour
     private void Start()
     {
         if (gameOverText != null)
-            gameOverText.text = "Game Over! You Lost";
+            gameOverText.text = "rip bozo";
 
         if (retryButton != null)
             retryButton.onClick.AddListener(OnRetry);
@@ -22,6 +22,12 @@ public class GameOverScreen : MonoBehaviour
 
     private void OnRetry()
     {
+        if (HealthManager.Instance == null)
+        {
+            var go = new GameObject("HealthManager");
+            go.AddComponent<HealthManager>();
+        }
+        HealthManager.Instance?.ResetHealth();
         TransitionManager.LoadScene(SceneFlow.MainMenuScene);
     }
 

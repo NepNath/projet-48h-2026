@@ -367,7 +367,6 @@ namespace SpeedBalatro
 
             float totalChips = baseChips + cardChips;
 
-            Debug.Log($"Hand: {handType}, Base Chips: {baseChips}, Card Chips: {cardChips}, Mult: {mult}, Total Score: {totalChips * mult}");
             return new HandScoreInfo
             {
                 handType = handType,

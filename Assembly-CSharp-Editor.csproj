@@ -632,6 +632,14 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@8bed5ad90189\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Google.VersionHandler">
+      <HintPath>Assets\MobileDependencyResolver\Editor\Google.VersionHandler.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Google.IOSResolver">
+      <HintPath>Assets\MobileDependencyResolver\Editor\1.2.185\Google.IOSResolver.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Collections.LowLevel.ILSupport">
       <HintPath>Library\PackageCache\com.unity.collections@12999e356c23\Unity.Collections.LowLevel.ILSupport\Unity.Collections.LowLevel.ILSupport.dll</HintPath>
       <Private>False</Private>
@@ -640,8 +648,16 @@
       <HintPath>Library\PackageCache\com.unity.ext.nunit@d8c07649098d\net40\unity-custom\nunit.framework.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Google.VersionHandlerImpl">
+      <HintPath>Assets\MobileDependencyResolver\Editor\1.2.185\Google.VersionHandlerImpl.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Plastic.Antlr3.Runtime">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@a5329f833fa8\Lib\Editor\Unity.Plastic.Antlr3.Runtime.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Google.JarResolver">
+      <HintPath>Assets\MobileDependencyResolver\Editor\1.2.185\Google.JarResolver.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
@@ -682,22 +698,6 @@
     </Reference>
     <Reference Include="Google.PackageManagerResolver">
       <HintPath>Assets\MobileDependencyResolver\Editor\1.2.185\Google.PackageManagerResolver.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.VersionHandlerImpl">
-      <HintPath>Assets\MobileDependencyResolver\Editor\1.2.185\Google.VersionHandlerImpl.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.VersionHandler">
-      <HintPath>Assets\MobileDependencyResolver\Editor\Google.VersionHandler.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.JarResolver">
-      <HintPath>Assets\MobileDependencyResolver\Editor\1.2.185\Google.JarResolver.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.IOSResolver">
-      <HintPath>Assets\MobileDependencyResolver\Editor\1.2.185\Google.IOSResolver.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="mscorlib">

@@ -31,6 +31,8 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             Debug.LogError("Missing UI references in KeyCardManager!");
             return;
         }
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayMiniGameMusic();
         startPosition = card.anchoredPosition;
         StartGame();
     }

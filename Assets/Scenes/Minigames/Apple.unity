@@ -287,7 +287,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RandomAppleSpawner
   prefab: {fileID: 8852468650036273060, guid: 6d7a66c5c479b9247a2e0da38257f534, type: 3}
   maxSpawnCountRange: 4
-  minSpawnCountRange: 10
+  minSpawnCountRange: 8
   radius: 3.01
 --- !u!4 &585092178
 Transform:

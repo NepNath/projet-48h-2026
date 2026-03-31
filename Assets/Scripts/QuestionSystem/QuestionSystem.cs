@@ -56,6 +56,16 @@ public class QuestionSystem : MonoBehaviour
 
     void Start()
     {
+        if (SoundManager.Instance != null)
+        {
+            Debug.Log("[QuestionSystem] PlayQuestionMusic appelé");
+            SoundManager.Instance.PlayQuestionMusic();
+        }
+        else
+        {
+            Debug.LogWarning("[QuestionSystem] SoundManager.Instance est NULL !");
+        }
+
         Random random = new();
         InitDict();
 

@@ -1,16 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using TMPro;
-using UnityEngine.InputSystem;
 
 namespace SpeedBalatro
 {
-    public class CardUI : MonoBehaviour, IPointerClickHandler
+    public class CardUI : MonoBehaviour
     {
         [Header("UI Components")]
         [SerializeField] private Image cardImage;
         [SerializeField] private GameObject selectionHighlight;
+        [SerializeField] private Button cardButton;
 
         private Card cardData;
         private bool isSelected;
@@ -24,6 +23,19 @@ namespace SpeedBalatro
             cardData = card;
             onCardClicked = clickCallback;
             UpdateCardDisplay();
+            
+            if (cardButton != null)
+            {
+                cardButton.onClick.AddListener(OnCardButtonClicked);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (cardButton != null)
+            {
+                cardButton.onClick.RemoveListener(OnCardButtonClicked);
+            }
         }
 
         private void UpdateCardDisplay()
@@ -37,43 +49,9 @@ namespace SpeedBalatro
             }
         }
 
-        public void OnPointerClick(PointerEventData eventData)
+        private void OnCardButtonClicked()
         {
             onCardClicked?.Invoke(this);
-        }
-
-        private void Update()
-        {
-            if (Mouse.current?.leftButton.wasPressedThisFrame == true)
-            {
-                CheckCardClick();
-            }
-        }
-
-        private void CheckCardClick()
-        {
-            Vector2 mousePosition = Mouse.current.position.ReadValue();
-
-            PointerEventData pointerData = new PointerEventData(EventSystem.current)
-            {
-                position = mousePosition
-            };
-
-            var raycastResults = new System.Collections.Generic.List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerData, raycastResults);
-
-            foreach (var result in raycastResults)
-            {
-                CardUI cardUI = result.gameObject.GetComponent<CardUI>();
-                if (cardUI != null)
-                {
-                    if (cardUI == this)
-                    {
-                        onCardClicked?.Invoke(this);
-                    }
-                    return;
-                }
-            }
         }
 
         public void SetSelected(bool selected)

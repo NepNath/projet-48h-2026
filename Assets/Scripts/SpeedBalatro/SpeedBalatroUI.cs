@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SpeedBalatro
 {
@@ -21,10 +22,6 @@ namespace SpeedBalatro
         [SerializeField] private Button submitButton;
         [SerializeField] private CurvedCardLayout curvedCardLayout;
 
-        [Header("Game State UI")]
-        [SerializeField] private GameObject gameOverMenu;
-        [SerializeField] private GameObject victoryMenu;
-
         [Header("References")]
         [SerializeField] private GameManager gameManager;
 
@@ -34,12 +31,13 @@ namespace SpeedBalatro
         {
             SubscribeToEvents();
             InitializeUI();
-            SetupButtons();
         }
 
         private void OnDestroy()
         {
             UnsubscribeFromEvents();
+            if (submitButton != null)
+                submitButton.onClick.RemoveListener(SubmitSelectedCards);
         }
 
         private void SubscribeToEvents()
@@ -48,6 +46,7 @@ namespace SpeedBalatro
             SpeedBalatroEvents.OnNewHandDealt += DisplayNewHand;
             SpeedBalatroEvents.OnScoreUpdated += UpdateCurrentScoreUI;
             SpeedBalatroEvents.OnHandScoreInfoUpdated += UpdateHandDisplay;
+            SpeedBalatroEvents.OnTargetScoreChanged += UpdateTargetScoreUI;
         }
 
         private void UnsubscribeFromEvents()
@@ -56,6 +55,7 @@ namespace SpeedBalatro
             SpeedBalatroEvents.OnNewHandDealt -= DisplayNewHand;
             SpeedBalatroEvents.OnScoreUpdated -= UpdateCurrentScoreUI;
             SpeedBalatroEvents.OnHandScoreInfoUpdated -= UpdateHandDisplay;
+            SpeedBalatroEvents.OnTargetScoreChanged -= UpdateTargetScoreUI;
         }
 
 
@@ -69,20 +69,12 @@ namespace SpeedBalatro
             if (handTypeLabel != null) handTypeLabel.text = "";
             if (chipsLabel != null) chipsLabel.text = "0";
             if (multLabel != null) multLabel.text = "x0";
-
-            if (gameOverMenu != null) gameOverMenu.SetActive(false);
-            if (victoryMenu != null) victoryMenu.SetActive(false);
-        }
-
-        private void SetupButtons()
-        {
             if (submitButton != null)
             {
-                submitButton.onClick.AddListener(SubmitSelectedCards);
                 submitButton.interactable = false;
+                submitButton.onClick.AddListener(SubmitSelectedCards);
             }
         }
-
 
         private void UpdateTimerUI(float timeRemaining)
         {
@@ -178,47 +170,26 @@ namespace SpeedBalatro
 
         private void UpdateSubmitButtonState()
         {
-            if (submitButton != null)
-            {
-                int selectedCount = GetSelectedCardCount();
-                submitButton.interactable = selectedCount > 0;
-
-                TextMeshProUGUI buttonText = submitButton.GetComponentInChildren<TextMeshProUGUI>();
-                if (buttonText != null)
-                {
-                    buttonText.text = selectedCount > 0 ?
-                        $"Submit Hand" : "Select Cards";
-                }
-            }
-        }
-
-        private int GetSelectedCardCount()
-        {
+            if (submitButton == null) return;
+            
             int count = 0;
             foreach (CardUI cardUI in currentHandUI)
-            {
                 if (cardUI.IsSelected) count++;
-            }
-            return count;
+            
+            submitButton.interactable = true;
+            
+            var buttonText = submitButton.GetComponentInChildren<TextMeshProUGUI>();
+            if (buttonText != null)
+                buttonText.text = count > 0 ? "Submit Hand" : "Select Cards";
         }
 
-        private void SubmitSelectedCards()
+        public void SubmitSelectedCards()
         {
-            List<Card> selectedCards = new();
-            foreach (CardUI cardUI in currentHandUI)
-            {
-                if (cardUI.IsSelected)
-                {
-                    selectedCards.Add(cardUI.GetCard());
-                }
-            }
-
-            if (selectedCards.Count > 0)
-            {
-                SpeedBalatroEvents.RaiseHandSubmitted(selectedCards.ToArray());
-            }
+            Debug.Log("Submit button clicked");
+            var selected = currentHandUI.Where(c => c.IsSelected).Select(c => c.GetCard()).ToArray();
+            if (selected.Length > 0)
+                SpeedBalatroEvents.RaiseHandSubmitted(selected);
         }
-
         private void ClearHandUI()
         {
             foreach (CardUI cardUI in currentHandUI)
@@ -230,29 +201,5 @@ namespace SpeedBalatro
             }
             currentHandUI.Clear();
         }
-
-        private void ShowVictoryMenu()
-        {
-            if (victoryMenu != null)
-            {
-                victoryMenu.SetActive(true);
-            }
-        }
-
-        private void ShowGameOverMenu()
-        {
-            if (gameOverMenu != null)
-            {
-                gameOverMenu.SetActive(true);
-            }
-        }
-
-        private void HideAllMenus()
-        {
-            if (gameOverMenu != null) gameOverMenu.SetActive(false);
-            if (victoryMenu != null) victoryMenu.SetActive(false);
-        }
-
-
     }
 }

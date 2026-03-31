@@ -119,10 +119,16 @@ namespace SpeedBalatro
             currentScore += handScore;
             SpeedBalatroEvents.RaiseScoreUpdated(currentScore);
 
-            if (currentScore >= targetScore)
+            if (currentScore == targetScore)
             {
                 gameActive = false;
-                SpeedBalatroEvents.RaiseGameStateChanged("Victory!");
+                SpeedBalatroEvents.RaiseGameStateChanged("Perfect Score!");
+                return;
+            }
+            else if (currentScore > targetScore)
+            {
+                gameActive = false;
+                SpeedBalatroEvents.RaiseGameStateChanged("Bust! Too High!");
                 return;
             }
 
@@ -146,6 +152,35 @@ namespace SpeedBalatro
         private float CalculateHandScore(Card[] cards)
         {
             return GetHandScoreInfo(cards).totalScore;
+        }
+
+        private float CalculateMaxScoreFromHand(Card[] hand)
+        {
+            float maxScore = 0f;
+            int totalCombinations = 1 << hand.Length; // 2^n combinations
+
+            for (int i = 1; i < totalCombinations; i++)
+            {
+                List<Card> subset = new();
+                for (int j = 0; j < hand.Length; j++)
+                {
+                    if ((i & (1 << j)) != 0)
+                    {
+                        subset.Add(hand[j]);
+                    }
+                }
+
+                if (subset.Count > 0)
+                {
+                    float score = GetHandScoreInfo(subset.ToArray()).totalScore;
+                    if (score > maxScore)
+                    {
+                        maxScore = score;
+                    }
+                }
+            }
+
+            return maxScore;
         }
         private int GetHandMultiplier(HandType handType)
         {
@@ -357,6 +392,11 @@ namespace SpeedBalatro
             Card[] newHand = DealCards(5);
             currentHand = new List<Card>(newHand);
             selectedCards.Clear();
+
+            float maxScore = CalculateMaxScoreFromHand(newHand);
+            targetScore = maxScore;
+            SpeedBalatroEvents.RaiseTargetScoreChanged(targetScore);
+
             SpeedBalatroEvents.RaiseNewHandDealt(newHand);
         }
 

@@ -15,6 +15,7 @@ namespace SpeedBalatro
         public static event Action<string> OnGameStateChanged;
         public static event Action<float> OnScoreUpdated;
         public static event Action<GameManager.HandScoreInfo> OnHandScoreInfoUpdated;
+        public static event Action<float> OnTargetScoreChanged;
 
         public static void RaiseCardSelected(Card card) => OnCardSelected?.Invoke(card);
         public static void RaiseCardDeselected(Card card) => OnCardDeselected?.Invoke(card);
@@ -26,5 +27,6 @@ namespace SpeedBalatro
         public static void RaiseGameStateChanged(string state) => OnGameStateChanged?.Invoke(state);
         public static void RaiseScoreUpdated(float score) => OnScoreUpdated?.Invoke(score);
         public static void RaiseHandScoreInfoUpdated(GameManager.HandScoreInfo info) => OnHandScoreInfoUpdated?.Invoke(info);
+        public static void RaiseTargetScoreChanged(float targetScore) => OnTargetScoreChanged?.Invoke(targetScore);
     }
 }

@@ -29,7 +29,7 @@ public static class SceneFlow
         else
         {
             HealthManager.Instance?.LoseLife();
-            return QuestionScene;
+            return PickMiniGame();
         }
     }
 
@@ -37,7 +37,7 @@ public static class SceneFlow
     {
         if (won)
         {
-            return QuestionScene;
+            return PickMiniGame();
         }
         else
         {

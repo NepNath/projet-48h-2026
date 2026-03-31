@@ -6,7 +6,7 @@ public static class SceneFlow
     public const string QuestionScene = "Question";
     public const string GameOverScene = "Perdu";
 
-    static readonly string[] MiniGameScenes = { "KeyCard", "DigitCode" };
+    static readonly string[] MiniGameScenes = { "KeyCard", "DigitCode", "Apple", "cable_game",  };
     static int nextMiniGameIndex;
 
     public static void ResetRun()

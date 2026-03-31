@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 8C
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: eigth Clubs
-  cardSprite: {fileID: 2291436506217357302, guid: e9c4cb92a3027c64a8afee90247b03d4, type: 3}
+  cardSprite: {fileID: 2291436506217357302, guid: 23c9ef8ff4e80284c948803bdededac8, type: 3}
   cardId: 46
   suit: 2
   rank: 8

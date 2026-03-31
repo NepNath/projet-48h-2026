@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 9C
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: nine Clubs
-  cardSprite: {fileID: 172605532238410447, guid: ce7231da50443d741941578d652bc62b, type: 3}
+  cardSprite: {fileID: 172605532238410447, guid: 50c9ed05881ad9144b7290807f949b63, type: 3}
   cardId: 47
   suit: 2
   rank: 9

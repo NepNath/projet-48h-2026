@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1S
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: Ace Spades
-  cardSprite: {fileID: 6354248559419169667, guid: c35c100de4c7d5f41a0967d71770c3d6, type: 3}
+  cardSprite: {fileID: 6354248559419169667, guid: a877d88575b52e84fbe9cdf7ba38aa41, type: 3}
   cardId: 26
   suit: 3
   rank: 1

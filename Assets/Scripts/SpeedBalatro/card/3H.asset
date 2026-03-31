@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 3H
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: three Hearts
-  cardSprite: {fileID: -1377003325818149169, guid: 9a23fe8d68a374f41ba322ffc40b74e2, type: 3}
+  cardSprite: {fileID: -1377003325818149169, guid: 339f5569a31f53646ba1514b0c50a636, type: 3}
   cardId: 2
   suit: 0
   rank: 3

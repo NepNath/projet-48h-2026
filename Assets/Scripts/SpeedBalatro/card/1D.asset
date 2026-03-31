@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 1D
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: Ace Diamonds
-  cardSprite: {fileID: -9026613320870144547, guid: a7fe97384d871c74fbaf64da77fbe4af, type: 3}
+  cardSprite: {fileID: -9026613320870144547, guid: abbbb2a30ebe7b147ac423734f2ad883, type: 3}
   cardId: 13
   suit: 1
   rank: 1

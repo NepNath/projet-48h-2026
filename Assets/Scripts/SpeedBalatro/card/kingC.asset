@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: kingC
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: king Clubs
-  cardSprite: {fileID: 5094249290038607176, guid: 2a9b91564f69f77419a5961d3211a55c, type: 3}
+  cardSprite: {fileID: 8373168956971341677, guid: 201f64e7e88a07f48915b67519ae2062, type: 3}
   cardId: 51
   suit: 2
   rank: 13

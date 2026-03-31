@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 7D
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: seven Diamonds
-  cardSprite: {fileID: 873259042014305138, guid: 97def3f1d77eda744959c8b525b27d68, type: 3}
+  cardSprite: {fileID: 873259042014305138, guid: 237fe8ee26833d647a61d590fe92340e, type: 3}
   cardId: 19
   suit: 1
   rank: 7

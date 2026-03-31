@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 8H
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: eigth Hearts
-  cardSprite: {fileID: 4516743829878686200, guid: fbf30b00e8048b44c8aaf7c7cb5c803a, type: 3}
+  cardSprite: {fileID: 4516743829878686200, guid: 4aebca833fb2074438c79d1a42d6b4a4, type: 3}
   cardId: 7
   suit: 0
   rank: 8

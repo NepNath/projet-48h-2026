@@ -94,7 +94,7 @@ public class DigitCodeManager : MonoBehaviour
     System.Collections.IEnumerator LoadNextScene(bool win)
     {
         yield return new WaitForSeconds(0.5f);
-        TransitionManager.LoadScene(SceneFlow.CompleteMiniGame());
+        TransitionManager.LoadScene(SceneFlow.CompleteMiniGame(win));
     }
 
     void UpdateUI()

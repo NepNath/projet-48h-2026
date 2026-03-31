@@ -16,17 +16,33 @@ public static class SceneFlow
     public static string StartRun()
     {
         ResetRun();
-        return QuestionScene;
-    }
-
-    public static string CompleteQuiz()
-    {
+        HealthManager.Instance?.ResetHealth();
         return PickMiniGame();
     }
 
-    public static string CompleteMiniGame()
+    public static string CompleteQuiz(bool won)
     {
-        return QuestionScene;
+        if (won)
+        {
+            return PickMiniGame();
+        }
+        else
+        {
+            HealthManager.Instance?.LoseLife();
+            return QuestionScene;
+        }
+    }
+
+    public static string CompleteMiniGame(bool won)
+    {
+        if (won)
+        {
+            return QuestionScene;
+        }
+        else
+        {
+            return QuestionScene;
+        }
     }
 
     static string PickMiniGame()

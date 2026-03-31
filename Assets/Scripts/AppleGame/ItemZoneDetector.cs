@@ -51,6 +51,6 @@ public class ItemZoneDetector : MonoBehaviour
     {
         if (finished) return;
         finished = true;
-        TransitionManager.LoadScene(SceneFlow.CompleteMiniGame());
+        TransitionManager.LoadScene(SceneFlow.CompleteMiniGame(win));
     }
 }

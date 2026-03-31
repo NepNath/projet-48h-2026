@@ -8,6 +8,13 @@ namespace SpeedBalatro
 
     public class GameManager : MonoBehaviour
     {
+        public struct HandScoreInfo
+        {
+            public HandType handType;
+            public float chips;
+            public int mult;
+            public float totalScore;
+        }
 
         [Header("Card Settings")]
         public List<Card> availableCards;
@@ -27,7 +34,6 @@ namespace SpeedBalatro
         private readonly HashSet<string> dealtHandKeys = new();
 
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
             InitializeGame();
@@ -62,7 +68,6 @@ namespace SpeedBalatro
             }
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (gameActive)
@@ -76,12 +81,11 @@ namespace SpeedBalatro
 
             currentScore = 0;
             currentTime = roundTimeLimit;
-            gameActive = true;
 
-            SpeedBalatroEvents.RaiseScoreUpdated(currentScore);
+            SpeedBalatroEvents.RaiseTimerUpdated(currentTime);
             SpeedBalatroEvents.RaiseGameStateChanged("Get Ready!");
+            SpeedBalatroEvents.RaiseScoreUpdated(currentScore);
 
-            // Small delay before dealing first hand
             StartCoroutine(DelayedStart());
         }
 
@@ -89,12 +93,23 @@ namespace SpeedBalatro
         {
             if (currentHand.Contains(card) && !selectedCards.Contains(card))
                 selectedCards.Add(card);
+
+            HandScoreInfo info = GetHandScoreInfo(selectedCards.ToArray());
+            SpeedBalatroEvents.RaiseHandScoreInfoUpdated(info);
+            SpeedBalatroEvents.RaiseScoreUpdated(info.totalScore);
         }
+
         private void HandleCardDeselected(Card card)
         {
             if (selectedCards.Contains(card))
                 selectedCards.Remove(card);
+
+            HandScoreInfo info = GetHandScoreInfo(selectedCards.ToArray());
+            SpeedBalatroEvents.RaiseHandScoreInfoUpdated(info);
+            SpeedBalatroEvents.RaiseScoreUpdated(info.totalScore);
         }
+
+
 
         private void HandleHandSubmitted(Card[] cards)
         {
@@ -102,10 +117,8 @@ namespace SpeedBalatro
 
             float handScore = CalculateHandScore(cards);
             currentScore += handScore;
-
             SpeedBalatroEvents.RaiseScoreUpdated(currentScore);
 
-            // Check win condition
             if (currentScore >= targetScore)
             {
                 gameActive = false;
@@ -121,6 +134,7 @@ namespace SpeedBalatro
         {
             gameActive = false;
             SpeedBalatroEvents.RaiseGameStateChanged("Time's Up!");
+            SpeedBalatroEvents.RaiseScoreUpdated(currentScore);
         }
 
         private void HandleGameRestart()
@@ -131,30 +145,212 @@ namespace SpeedBalatro
 
         private float CalculateHandScore(Card[] cards)
         {
-            float baseScore = 0;
-
-            // TODO - Implement card effects and scoring logic
-            foreach (Card card in cards)
-            {
-                baseScore += card.GetValue();
-            }
-
-            // Apply multipliers based on hand type
-            HandType handType = EvaluateHandType(cards);
-            return baseScore * GetHandMultiplier(handType);
+            return GetHandScoreInfo(cards).totalScore;
         }
-
         private int GetHandMultiplier(HandType handType)
         {
-            // Return multiplier based on hand strength
-            return 1; // Placeholder
+            return handType switch
+            {
+                HandType.HighCard => 1,
+                HandType.Pair => 2,
+                HandType.TwoPair => 2,
+                HandType.ThreeOfAKind => 3,
+                HandType.Straight => 4,
+                HandType.Flush => 4,
+                HandType.FullHouse => 4,
+                HandType.FourOfAKind => 7,
+                HandType.StraightFlush => 8,
+                HandType.RoyalFlush => 8,
+                _ => 1
+            };
+        }
+
+        private float GetHandBaseChips(HandType handType)
+        {
+            return handType switch
+            {
+                HandType.HighCard => 5,
+                HandType.Pair => 10,
+                HandType.TwoPair => 20,
+                HandType.ThreeOfAKind => 30,
+                HandType.Straight => 30,
+                HandType.Flush => 35,
+                HandType.FullHouse => 40,
+                HandType.FourOfAKind => 60,
+                HandType.StraightFlush => 100,
+                HandType.RoyalFlush => 100,
+                _ => 0
+            };
         }
 
         private HandType EvaluateHandType(Card[] cards)
         {
-            // Implement hand evaluation (pair, flush, straight, etc.)
-            return HandType.HighCard; // Placeholder
+            if (cards == null || cards.Length == 0)
+                return HandType.HighCard;
+
+            bool isFlush = cards.Length >= 5
+                && cards.All(c => c.suit == cards[0].suit);
+            bool isStraight = IsStraight(cards);
+
+            var rankGroups = cards
+                .GroupBy(c => c.rank)
+                .OrderByDescending(g => g.Count())
+                .ThenByDescending(g => g.Key)
+                .ToList();
+
+            int largest = rankGroups[0].Count();
+            int secondLargest = rankGroups.Count > 1
+                ? rankGroups[1].Count()
+                : 0;
+
+            if (isFlush && isStraight)
+            {
+                int[] sorted = cards
+                    .Select(c => (int)c.rank)
+                    .OrderBy(r => r)
+                    .ToArray();
+
+                bool isRoyal = sorted.SequenceEqual(
+                    new[] { 1, 10, 11, 12, 13 }
+                );
+                return isRoyal ? HandType.RoyalFlush : HandType.StraightFlush;
+            }
+
+            if (largest == 4) return HandType.FourOfAKind;
+            if (largest == 3 && secondLargest >= 2) return HandType.FullHouse;
+            if (isFlush) return HandType.Flush;
+            if (isStraight) return HandType.Straight;
+            if (largest == 3) return HandType.ThreeOfAKind;
+            if (largest == 2 && secondLargest == 2) return HandType.TwoPair;
+            if (largest == 2) return HandType.Pair;
+
+            return HandType.HighCard;
         }
+
+        private bool IsStraight(Card[] cards)
+        {
+            if (cards == null || cards.Length < 5) return false;
+
+            int[] ranks = cards
+                .Select(c => (int)c.rank)
+                .Distinct()
+                .OrderBy(r => r)
+                .ToArray();
+
+            if (ranks.Length < 5) return false;
+
+            // Normal consecutive: e.g. 3-4-5-6-7
+            if (ranks[4] - ranks[0] == 4) return true;
+
+            // Ace-high wrap: A(1), 10, J, Q, K
+            if (ranks.SequenceEqual(new[] { 1, 10, 11, 12, 13 }))
+                return true;
+
+            return false;
+        }
+
+        /// Returns only the cards that "score" for the given hand type,
+        /// matching Balatro's behaviour.
+        private Card[] GetScoringCards(Card[] cards, HandType handType)
+        {
+            switch (handType)
+            {
+                case HandType.Straight:
+                case HandType.Flush:
+                case HandType.FullHouse:
+                case HandType.StraightFlush:
+                case HandType.RoyalFlush:
+                    return cards; // all cards score
+
+                case HandType.FourOfAKind:
+                    {
+                        CardRank quadRank = cards
+                            .GroupBy(c => c.rank)
+                            .First(g => g.Count() == 4)
+                            .Key;
+                        return cards.Where(c => c.rank == quadRank).ToArray();
+                    }
+
+                case HandType.ThreeOfAKind:
+                    {
+                        CardRank tripRank = cards
+                            .GroupBy(c => c.rank)
+                            .First(g => g.Count() == 3)
+                            .Key;
+                        return cards.Where(c => c.rank == tripRank).ToArray();
+                    }
+
+                case HandType.TwoPair:
+                    {
+                        var pairRanks = cards
+                            .GroupBy(c => c.rank)
+                            .Where(g => g.Count() >= 2)
+                            .OrderByDescending(g => g.Key)
+                            .Take(2)
+                            .Select(g => g.Key)
+                            .ToHashSet();
+                        return cards.Where(c => pairRanks.Contains(c.rank)).ToArray();
+                    }
+
+                case HandType.Pair:
+                    {
+                        CardRank pairRank = cards
+                            .GroupBy(c => c.rank)
+                            .First(g => g.Count() == 2)
+                            .Key;
+                        return cards.Where(c => c.rank == pairRank).ToArray();
+                    }
+
+                case HandType.HighCard:
+                default:
+                    {
+                        // Only the single highest card scores.
+                        // Ace is highest in Balatro.
+                        Card highest = cards
+                            .OrderByDescending(c =>
+                                c.rank == CardRank.Ace ? 14 : (int)c.rank
+                            )
+                            .First();
+                        return new[] { highest };
+                    }
+            }
+        }
+        public HandScoreInfo GetHandScoreInfo(Card[] cards)
+        {
+            if (cards == null || cards.Length == 0)
+            {
+                return new HandScoreInfo
+                {
+                    handType = HandType.HighCard,
+                    chips = 0,
+                    mult = 0,
+                    totalScore = 0
+                };
+            }
+
+            HandType handType = EvaluateHandType(cards);
+            float baseChips = GetHandBaseChips(handType);
+            int mult = GetHandMultiplier(handType);
+
+            Card[] scoringCards = GetScoringCards(cards, handType);
+            float cardChips = 0f;
+            foreach (Card card in scoringCards)
+            {
+                cardChips += card.GetValue();
+            }
+
+            float totalChips = baseChips + cardChips;
+
+            return new HandScoreInfo
+            {
+                handType = handType,
+                chips = totalChips,
+                mult = mult,
+                totalScore = totalChips * mult
+            };
+        }
+
+
 
         private void DealNewHand()
         {
@@ -206,7 +402,6 @@ namespace SpeedBalatro
                 }
             }
 
-            // All combinations have likely been used. Reset history and continue.
             dealtHandKeys.Clear();
 
             List<Card> resetShuffle = new List<Card>(uniqueCards);
@@ -234,11 +429,12 @@ namespace SpeedBalatro
         private IEnumerator DelayedStart()
         {
             yield return new WaitForSeconds(1f);
-            SpeedBalatroEvents.RaiseGameStateChanged("Playing");
             DealNewHand();
+            yield return new WaitForSeconds(0.6f);
+            gameActive = true;
+            SpeedBalatroEvents.RaiseGameStateChanged("Playing");
         }
 
-        // Public getters for UI
         public float GetCurrentScore() => currentScore;
         public float GetTimeRemaining() => roundTimeLimit - currentTime;
         public float GetTargetScore() => targetScore;

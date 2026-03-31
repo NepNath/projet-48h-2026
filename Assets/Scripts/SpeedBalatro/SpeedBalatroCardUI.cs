@@ -10,8 +10,6 @@ namespace SpeedBalatro
     {
         [Header("UI Components")]
         [SerializeField] private Image cardImage;
-        [SerializeField] private TextMeshProUGUI cardNameText;
-        [SerializeField] private TextMeshProUGUI valueText;
         [SerializeField] private GameObject selectionHighlight;
 
         private Card cardData;
@@ -37,27 +35,15 @@ namespace SpeedBalatro
                 cardImage.sprite = cardData.cardSprite;
                 cardImage.color = cardData.cardColor;
             }
-
-            if (cardNameText != null)
-            {
-                cardNameText.text = cardData.cardName;
-            }
-
-            if (valueText != null)
-            {
-                valueText.text = cardData.GetValue().ToString("F0");
-            }
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            // Fallback - also respond to EventSystem clicks if they work
             onCardClicked?.Invoke(this);
         }
 
         private void Update()
         {
-            // Manual click detection using Input System (bypasses EventSystem issues)
             if (Mouse.current?.leftButton.wasPressedThisFrame == true)
             {
                 CheckCardClick();
@@ -66,7 +52,6 @@ namespace SpeedBalatro
 
         private void CheckCardClick()
         {
-            // Use Input System to get mouse position
             Vector2 mousePosition = Mouse.current.position.ReadValue();
 
             PointerEventData pointerData = new PointerEventData(EventSystem.current)
@@ -77,18 +62,15 @@ namespace SpeedBalatro
             var raycastResults = new System.Collections.Generic.List<RaycastResult>();
             EventSystem.current.RaycastAll(pointerData, raycastResults);
 
-            // Find the first (top-most) card in the raycast results
             foreach (var result in raycastResults)
             {
                 CardUI cardUI = result.gameObject.GetComponent<CardUI>();
                 if (cardUI != null)
                 {
-                    // Only trigger if this is the top-most card AND it's this card
                     if (cardUI == this)
                     {
                         onCardClicked?.Invoke(this);
                     }
-                    // Always break after finding the first card to ensure only top-most is selected
                     return;
                 }
             }
@@ -102,8 +84,6 @@ namespace SpeedBalatro
                 selectionHighlight.SetActive(isSelected);
             }
 
-            // Visual feedback: move card up when selected, back to original when deselected
-            // Use anchoredPosition to stay consistent with the curve layout
             RectTransform rectTransform = GetComponent<RectTransform>();
             if (rectTransform != null)
             {

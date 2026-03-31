@@ -8,15 +8,18 @@ namespace SpeedBalatro
     public class SpeedBalatroUI : MonoBehaviour
     {
         [Header("HUD Elements")]
-        [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private TextMeshProUGUI timeText;
         [SerializeField] private TextMeshProUGUI targetScoreText;
-        [SerializeField] private TextMeshProUGUI gameStateText;
+        [SerializeField] private TextMeshProUGUI currentScoreText;
+        [SerializeField] private TextMeshProUGUI handTypeLabel;
+        [SerializeField] private TextMeshProUGUI chipsLabel;
+        [SerializeField] private TextMeshProUGUI multLabel;
 
         [Header("Hand Display")]
         [SerializeField] private GameObject handContainer;
         [SerializeField] private GameObject cardUIPrefab;
-        [SerializeField] private Button submitHandButton;
+        [SerializeField] private Button submitButton;
+        [SerializeField] private CurvedCardLayout curvedCardLayout;
 
         [Header("Game State UI")]
         [SerializeField] private GameObject gameOverMenu;
@@ -41,19 +44,20 @@ namespace SpeedBalatro
 
         private void SubscribeToEvents()
         {
-            SpeedBalatroEvents.OnScoreUpdated += UpdateScoreUI;
             SpeedBalatroEvents.OnTimerUpdated += UpdateTimerUI;
             SpeedBalatroEvents.OnNewHandDealt += DisplayNewHand;
-            SpeedBalatroEvents.OnGameStateChanged += HandleGameStateChanged;
+            SpeedBalatroEvents.OnScoreUpdated += UpdateCurrentScoreUI;
+            SpeedBalatroEvents.OnHandScoreInfoUpdated += UpdateHandDisplay;
         }
 
         private void UnsubscribeFromEvents()
         {
-            SpeedBalatroEvents.OnScoreUpdated -= UpdateScoreUI;
             SpeedBalatroEvents.OnTimerUpdated -= UpdateTimerUI;
             SpeedBalatroEvents.OnNewHandDealt -= DisplayNewHand;
-            SpeedBalatroEvents.OnGameStateChanged -= HandleGameStateChanged;
+            SpeedBalatroEvents.OnScoreUpdated -= UpdateCurrentScoreUI;
+            SpeedBalatroEvents.OnHandScoreInfoUpdated -= UpdateHandDisplay;
         }
+
 
         private void InitializeUI()
         {
@@ -62,26 +66,23 @@ namespace SpeedBalatro
                 UpdateTargetScoreUI(gameManager.GetTargetScore());
             }
 
+            if (handTypeLabel != null) handTypeLabel.text = "";
+            if (chipsLabel != null) chipsLabel.text = "0";
+            if (multLabel != null) multLabel.text = "x0";
+
             if (gameOverMenu != null) gameOverMenu.SetActive(false);
             if (victoryMenu != null) victoryMenu.SetActive(false);
         }
 
         private void SetupButtons()
         {
-            if (submitHandButton != null)
+            if (submitButton != null)
             {
-                submitHandButton.onClick.AddListener(SubmitSelectedCards);
-                submitHandButton.interactable = false;
+                submitButton.onClick.AddListener(SubmitSelectedCards);
+                submitButton.interactable = false;
             }
         }
 
-        private void UpdateScoreUI(float newScore)
-        {
-            if (scoreText != null)
-            {
-                scoreText.text = $"Score: {newScore:N0}";
-            }
-        }
 
         private void UpdateTimerUI(float timeRemaining)
         {
@@ -89,15 +90,11 @@ namespace SpeedBalatro
             {
                 int seconds = Mathf.FloorToInt(timeRemaining % 60);
                 int millis = Mathf.FloorToInt(timeRemaining * 100 % 100);
-                timeText.text = $"Time: {seconds:00}:{millis:00}";
+                timeText.text = $"{seconds:00}:{millis:00}";
 
                 if (timeRemaining <= 10f)
                 {
                     timeText.color = Color.red;
-                }
-                else if (timeRemaining <= 30f)
-                {
-                    timeText.color = Color.yellow;
                 }
                 else
                 {
@@ -113,25 +110,27 @@ namespace SpeedBalatro
                 targetScoreText.text = $"Target: {targetScore:N0}";
             }
         }
-
-        private void HandleGameStateChanged(string state)
+        private void UpdateCurrentScoreUI(float currentScore)
         {
-            if (gameStateText != null)
+            if (currentScoreText != null)
             {
-                gameStateText.text = state;
+                currentScoreText.text = $"{currentScore:N0}";
             }
+        }
 
-            switch (state)
+        private void UpdateHandDisplay(GameManager.HandScoreInfo info)
+        {
+            if (info.totalScore == 0)
             {
-                case "Victory!":
-                    ShowVictoryMenu();
-                    break;
-                case "Time's Up!":
-                    ShowGameOverMenu();
-                    break;
-                case "Playing":
-                    HideAllMenus();
-                    break;
+                handTypeLabel.text = "";
+                chipsLabel.text = "0";
+                multLabel.text = "x0";
+            }
+            else
+            {
+                handTypeLabel.text = info.handType.ToString();
+                chipsLabel.text = info.chips.ToString();
+                multLabel.text = $"x{info.mult}";
             }
         }
 
@@ -150,6 +149,11 @@ namespace SpeedBalatro
                         currentHandUI.Add(cardUI);
                     }
                 }
+            }
+
+            if (curvedCardLayout != null)
+            {
+                curvedCardLayout.ArrangeCards();
             }
 
             UpdateSubmitButtonState();
@@ -174,12 +178,12 @@ namespace SpeedBalatro
 
         private void UpdateSubmitButtonState()
         {
-            if (submitHandButton != null)
+            if (submitButton != null)
             {
                 int selectedCount = GetSelectedCardCount();
-                submitHandButton.interactable = selectedCount > 0;
+                submitButton.interactable = selectedCount > 0;
 
-                TextMeshProUGUI buttonText = submitHandButton.GetComponentInChildren<TextMeshProUGUI>();
+                TextMeshProUGUI buttonText = submitButton.GetComponentInChildren<TextMeshProUGUI>();
                 if (buttonText != null)
                 {
                     buttonText.text = selectedCount > 0 ?
@@ -248,5 +252,7 @@ namespace SpeedBalatro
             if (gameOverMenu != null) gameOverMenu.SetActive(false);
             if (victoryMenu != null) victoryMenu.SetActive(false);
         }
+
+
     }
 }

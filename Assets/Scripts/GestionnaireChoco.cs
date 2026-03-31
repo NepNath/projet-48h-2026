@@ -10,8 +10,8 @@ public class GestionnaireChoco : MonoBehaviour
     private int indexActuel = 0;
 
     [Header("Timer Visuel")]
-    public Image imageAfficheTimer; 
-    public List<Sprite> spritesTimer; 
+    public Image imageAfficheTimer;
+    public List<Sprite> spritesTimer;
     public float tempsTotal = 10f; 
     private float tempsRestant;
     private bool jeuFini = false;
@@ -19,7 +19,7 @@ public class GestionnaireChoco : MonoBehaviour
     void Start()
     {
         tempsRestant = tempsTotal;
-        Time.timeScale = 1f; 
+        Time.timeScale = 1f;
     }
 
     void Update()
@@ -27,7 +27,7 @@ public class GestionnaireChoco : MonoBehaviour
         if (!jeuFini && tempsRestant > 0)
         {
             tempsRestant -= Time.deltaTime;
-            GererVisuelTimer();
+            GererVisuelTimer(); 
 
             if (tempsRestant <= 0)
             {
@@ -36,10 +36,10 @@ public class GestionnaireChoco : MonoBehaviour
         }
     }
 
-    // Vérifie bien l'ordre ici : public, puis void, puis le nom
-    public void GererVisuelTimer() 
+    void GererVisuelTimer()
     {
-        if (spritesTimer.Count < 3) return;
+        // Sécurité : on vérifie qu'on a bien 3 sprites dans la liste
+        if (spritesTimer == null || spritesTimer.Count < 3) return;
 
         float pourcentage = tempsRestant / tempsTotal;
 
@@ -65,8 +65,9 @@ public class GestionnaireChoco : MonoBehaviour
         }
         else
         {
+            Debug.Log("Victoire !");
             jeuFini = true;
-            Debug.Log("Gagné !");
+            Die();
         }
     }
 
@@ -75,5 +76,14 @@ public class GestionnaireChoco : MonoBehaviour
         jeuFini = true;
         Time.timeScale = 0f; 
         Debug.Log("GAME OVER");
+    }
+
+void Die()
+    {
+        // Désactive l'objet qui porte l'image du bouton
+        if (imageDuBouton != null) 
+        {
+            imageDuBouton.gameObject.SetActive(false);
+        }
     }
 }

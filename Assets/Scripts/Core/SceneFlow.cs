@@ -31,6 +31,7 @@ public static class SceneFlow
     {
         if (won)
         {
+            HealthManager.Instance?.GainLife(1);
             return PickMiniGame();
         }
         else

@@ -21,7 +21,6 @@ public static class BuildSettingsHelper
         var scenes = EditorBuildSettings.scenes.ToList();
         if (!scenes.Any(s => s.path == path))
         {
-            Debug.Log($"[BuildSettingsHelper] Adding scene to Build Settings: {path}");
             scenes.Add(new EditorBuildSettingsScene(path, true));
             EditorBuildSettings.scenes = scenes.ToArray();
         }

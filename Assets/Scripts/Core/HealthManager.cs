@@ -36,20 +36,25 @@ public class HealthManager : MonoBehaviour
     public void LoseLife()
     {
         currentLives--;
-        // prevent negative lives
         if (currentLives < 0) currentLives = 0;
-        Debug.Log($"Lost a life! Current lives: {currentLives}");
         UpdateUI();
 
         if (currentLives <= 0)
         {
-            Debug.Log("GameOver triggered!");
             GameOver();
         }
     }
 
     public int GetCurrentLives() => currentLives;
     public int GetMaxLives() => maxLives;
+
+    public void GainLife(int amount = 1)
+    {
+        if (amount <= 0) return;
+        currentLives += amount;
+        if (currentLives > maxLives) currentLives = maxLives;
+        UpdateUI();
+    }
 
     private void UpdateUI()
     {

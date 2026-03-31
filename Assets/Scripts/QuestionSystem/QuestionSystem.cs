@@ -154,7 +154,7 @@ public class QuestionSystem : MonoBehaviour
         if (_resultText != null)
             _resultText.text = correct ? "Bonne reponse" : "Mauvaise reponse";
         yield return new WaitForSeconds(0.5f);
-        TransitionManager.LoadScene(SceneFlow.CompleteQuiz());
+        TransitionManager.LoadScene(SceneFlow.CompleteQuiz(correct));
     }
     void OnDestroy()
     {

@@ -105,11 +105,12 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         gameActive = false;
         CancelInvoke();
         resultText.text = win ? "ACCESS GRANTED" : "ACCESS DENIED";
-        Invoke(nameof(LoadNextScene), 0.5f);
+        StartCoroutine(LoadNextScene(win));
     }
 
-    void LoadNextScene()
+    System.Collections.IEnumerator LoadNextScene(bool win)
     {
-        TransitionManager.LoadScene(SceneFlow.CompleteMiniGame());
+        yield return new WaitForSeconds(0.5f);
+        TransitionManager.LoadScene(SceneFlow.CompleteMiniGame(win));
     }
 }

@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Apple.unity
     guid: 2378480d9f878f44783e77e63ddfd9a3
+  - enabled: 1
+    path: Assets/Scenes/Perdu.unity
+    guid: ca6d67f0634a99b4ba343796993d5008
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

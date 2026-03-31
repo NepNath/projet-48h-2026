@@ -8,7 +8,8 @@ namespace SpeedBalatro
         public static event Action<Card> OnCardDeselected;
         public static event Action<Card[]> OnHandSubmitted;
         public static event Action OnTimerExpired;
-        public static event Action OnGameRestart;
+        public static event Action<string> OnGameWon;
+        public static event Action<string> OnGameLost;
 
         public static event Action<float> OnTimerUpdated;
         public static event Action<Card[]> OnNewHandDealt;
@@ -21,7 +22,8 @@ namespace SpeedBalatro
         public static void RaiseCardDeselected(Card card) => OnCardDeselected?.Invoke(card);
         public static void RaiseHandSubmitted(Card[] cards) => OnHandSubmitted?.Invoke(cards);
         public static void RaiseTimerExpired() => OnTimerExpired?.Invoke();
-        public static void RaiseGameRestart() => OnGameRestart?.Invoke();
+        public static void RaiseGameWon(string message) => OnGameWon?.Invoke(message);
+        public static void RaiseGameLost(string message) => OnGameLost?.Invoke(message);
         public static void RaiseTimerUpdated(float time) => OnTimerUpdated?.Invoke(time);
         public static void RaiseNewHandDealt(Card[] hand) => OnNewHandDealt?.Invoke(hand);
         public static void RaiseGameStateChanged(string state) => OnGameStateChanged?.Invoke(state);

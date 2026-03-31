@@ -46,7 +46,6 @@ namespace SpeedBalatro
             SpeedBalatroEvents.OnCardDeselected += HandleCardDeselected;
             SpeedBalatroEvents.OnHandSubmitted += HandleHandSubmitted;
             SpeedBalatroEvents.OnTimerExpired += HandleTimerExpired;
-            SpeedBalatroEvents.OnGameRestart += HandleGameRestart;
         }
 
         private void OnDestroy()
@@ -55,7 +54,6 @@ namespace SpeedBalatro
             SpeedBalatroEvents.OnCardDeselected -= HandleCardDeselected;
             SpeedBalatroEvents.OnHandSubmitted -= HandleHandSubmitted;
             SpeedBalatroEvents.OnTimerExpired -= HandleTimerExpired;
-            SpeedBalatroEvents.OnGameRestart -= HandleGameRestart;
         }
 
         private void UpdateTimer()
@@ -119,34 +117,27 @@ namespace SpeedBalatro
             currentScore += handScore;
             SpeedBalatroEvents.RaiseScoreUpdated(currentScore);
 
+            gameActive = false;
+
             if (currentScore == targetScore)
             {
-                gameActive = false;
-                SpeedBalatroEvents.RaiseGameStateChanged("Perfect Score!");
-                return;
+                SpeedBalatroEvents.RaiseGameWon("Perfect Score!");
             }
             else if (currentScore > targetScore)
             {
-                gameActive = false;
-                SpeedBalatroEvents.RaiseGameStateChanged("Bust! Too High!");
-                return;
+                SpeedBalatroEvents.RaiseGameLost("Bust! Too High!");
             }
-
-            selectedCards.Clear();
-            DealNewHand();
+            else
+            {
+                SpeedBalatroEvents.RaiseGameLost($"Score Too Low! ({currentScore:N0} / {targetScore:N0})");
+            }
         }
 
         private void HandleTimerExpired()
         {
             gameActive = false;
-            SpeedBalatroEvents.RaiseGameStateChanged("Time's Up!");
+            SpeedBalatroEvents.RaiseGameLost("Time's Up!");
             SpeedBalatroEvents.RaiseScoreUpdated(currentScore);
-        }
-
-        private void HandleGameRestart()
-        {
-            dealtHandKeys.Clear();
-            InitializeGame();
         }
 
         private float CalculateHandScore(Card[] cards)

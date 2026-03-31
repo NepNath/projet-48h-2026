@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace SpeedBalatro
 {
@@ -22,6 +23,10 @@ namespace SpeedBalatro
         [SerializeField] private Button submitButton;
         [SerializeField] private CurvedCardLayout curvedCardLayout;
 
+        [Header("Game Over")]
+        [SerializeField] private GameObject gameOverPanel;
+        [SerializeField] private TextMeshProUGUI gameOverMessageText;
+
         [Header("References")]
         [SerializeField] private GameManager gameManager;
 
@@ -36,8 +41,6 @@ namespace SpeedBalatro
         private void OnDestroy()
         {
             UnsubscribeFromEvents();
-            if (submitButton != null)
-                submitButton.onClick.RemoveListener(SubmitSelectedCards);
         }
 
         private void SubscribeToEvents()
@@ -47,6 +50,8 @@ namespace SpeedBalatro
             SpeedBalatroEvents.OnScoreUpdated += UpdateCurrentScoreUI;
             SpeedBalatroEvents.OnHandScoreInfoUpdated += UpdateHandDisplay;
             SpeedBalatroEvents.OnTargetScoreChanged += UpdateTargetScoreUI;
+            SpeedBalatroEvents.OnGameWon += HandleGameWon;
+            SpeedBalatroEvents.OnGameLost += HandleGameLost;
         }
 
         private void UnsubscribeFromEvents()
@@ -56,6 +61,8 @@ namespace SpeedBalatro
             SpeedBalatroEvents.OnScoreUpdated -= UpdateCurrentScoreUI;
             SpeedBalatroEvents.OnHandScoreInfoUpdated -= UpdateHandDisplay;
             SpeedBalatroEvents.OnTargetScoreChanged -= UpdateTargetScoreUI;
+            SpeedBalatroEvents.OnGameWon -= HandleGameWon;
+            SpeedBalatroEvents.OnGameLost -= HandleGameLost;
         }
 
 
@@ -66,6 +73,7 @@ namespace SpeedBalatro
                 UpdateTargetScoreUI(gameManager.GetTargetScore());
             }
 
+            if (gameOverPanel != null) gameOverPanel.SetActive(false);
             if (handTypeLabel != null) handTypeLabel.text = "";
             if (chipsLabel != null) chipsLabel.text = "0";
             if (multLabel != null) multLabel.text = "x0";
@@ -74,6 +82,7 @@ namespace SpeedBalatro
                 submitButton.interactable = false;
                 submitButton.onClick.AddListener(SubmitSelectedCards);
             }
+
         }
 
         private void UpdateTimerUI(float timeRemaining)
@@ -171,13 +180,13 @@ namespace SpeedBalatro
         private void UpdateSubmitButtonState()
         {
             if (submitButton == null) return;
-            
+
             int count = 0;
             foreach (CardUI cardUI in currentHandUI)
                 if (cardUI.IsSelected) count++;
-            
-            submitButton.interactable = true;
-            
+
+            submitButton.interactable = count > 0;
+
             var buttonText = submitButton.GetComponentInChildren<TextMeshProUGUI>();
             if (buttonText != null)
                 buttonText.text = count > 0 ? "Submit Hand" : "Select Cards";
@@ -185,7 +194,6 @@ namespace SpeedBalatro
 
         public void SubmitSelectedCards()
         {
-            Debug.Log("Submit button clicked");
             var selected = currentHandUI.Where(c => c.IsSelected).Select(c => c.GetCard()).ToArray();
             if (selected.Length > 0)
                 SpeedBalatroEvents.RaiseHandSubmitted(selected);
@@ -201,5 +209,58 @@ namespace SpeedBalatro
             }
             currentHandUI.Clear();
         }
+
+        private void HandleGameWon(string message)
+        {
+            if (gameOverPanel != null)
+                gameOverPanel.SetActive(true);
+
+            if (gameOverMessageText != null)
+            {
+                gameOverMessageText.text = message;
+                gameOverMessageText.color = Color.green;
+            }
+            StartCoroutine(LoadNextScene(true));
+
+            DisableGameControls();
+        }
+
+        private void HandleGameLost(string message)
+        {
+            if (gameOverPanel != null)
+                gameOverPanel.SetActive(true);
+
+            if (gameOverMessageText != null)
+            {
+                gameOverMessageText.text = message;
+                gameOverMessageText.color = Color.red;
+            }
+        StartCoroutine(LoadNextScene(false));
+
+            DisableGameControls();
+        }
+
+        private void DisableGameControls()
+        {
+            if (submitButton != null)
+                submitButton.interactable = false;
+
+            foreach (var cardUI in currentHandUI)
+            {
+                if (cardUI != null)
+                {
+                    Button cardButton = cardUI.GetComponent<Button>();
+                    if (cardButton != null)
+                        cardButton.interactable = false;
+                }
+            }
+        }
+
+        IEnumerator LoadNextScene(bool win)
+        {
+            yield return new WaitForSeconds(0.5f);
+            TransitionManager.LoadScene(SceneFlow.CompleteMiniGame(win));
+        }
+
     }
 }

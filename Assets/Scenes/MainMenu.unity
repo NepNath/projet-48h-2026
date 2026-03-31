@@ -382,8 +382,9 @@ MonoBehaviour:
   musicSource: {fileID: 705638008}
   sfxSource: {fileID: 0}
   menuMusic: {fileID: 0}
-  questionMusic: {fileID: 0}
-  miniGameMusic: {fileID: 0}
+  questionMusic: {fileID: 8300000, guid: 621a6ca26f046064eb3afb7e3fb3479f, type: 3}
+  miniGameMusic: {fileID: 8300000, guid: a58d763d7984fc44881113f64d0bf0bf, type: 3}
+  gameOverMusic: {fileID: 0}
   audioMixer: {fileID: 0}
 --- !u!4 &705638007
 Transform:

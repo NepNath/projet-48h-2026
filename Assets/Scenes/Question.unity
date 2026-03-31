@@ -829,6 +829,24 @@ MonoBehaviour:
     question: Quelle est la capitale de la France ?
   - id: 36
     question: "Quelle est la mer la plus sal\xE9 au monde ?"
+  - id: 37
+    question: Quel est le plus petit pays au monde ?
+  - id: 38
+    question: "O\xF9 se situe le Parlement europ\xE9en ?"
+  - id: 39
+    question: "Combien d\u2019\xC9tats composent les USA ?"
+  - id: 40
+    question: "Quelle est la capitale de l\u2019Uruguay  ?"
+  - id: 41
+    question: "O\xF9 le soleil ne se couche parfois pas  ?"
+  - id: 42
+    question: Quel est le nouveau nom du Swaziland ?
+  - id: 43
+    question: "Quel pays ne fait pas partie de l\u2019ex-Yougoslavie ?"
+  - id: 44
+    question: "Combien de pays composent l\u2019UE"
+  - id: 45
+    question: "Quel pays n\u2019est pas une monarchie constitutionnelle"
   _answers:
   - id: 0
     answer: Gris
@@ -1160,6 +1178,87 @@ MonoBehaviour:
   - id: 36
     answer: 'la mer morte '
     IsCorrect: 1
+  - id: 37
+    answer: 'Vatican '
+    IsCorrect: 1
+  - id: 37
+    answer: Chypre
+    IsCorrect: 0
+  - id: 37
+    answer: 'Montenegro '
+    IsCorrect: 0
+  - id: 38
+    answer: Francfort
+    IsCorrect: 0
+  - id: 38
+    answer: 'Bruxelles '
+    IsCorrect: 1
+  - id: 38
+    answer: Annecy
+    IsCorrect: 0
+  - id: 38
+    answer: Annecy
+    IsCorrect: 0
+  - id: 39
+    answer: 15
+    IsCorrect: 0
+  - id: 39
+    answer: 50
+    IsCorrect: 0
+  - id: 39
+    answer: 51
+    IsCorrect: 0
+  - id: 40
+    answer: Montevideo
+    IsCorrect: 1
+  - id: 40
+    answer: "S\xE3o Paulo"
+    IsCorrect: 0
+  - id: 40
+    answer: Bogota
+    IsCorrect: 0
+  - id: 41
+    answer: Anchorage
+    IsCorrect: 0
+  - id: 41
+    answer: "Troms\xF8"
+    IsCorrect: 0
+  - id: 41
+    answer: Sapporo
+    IsCorrect: 0
+  - id: 42
+    answer: Kashyyk
+    IsCorrect: 0
+  - id: 42
+    answer: Eberhard
+    IsCorrect: 0
+  - id: 43
+    answer: Hongrie
+    IsCorrect: 0
+  - id: 43
+    answer: Serbie
+    IsCorrect: 0
+  - id: 43
+    answer: Croatie
+    IsCorrect: 0
+  - id: 44
+    answer: 10
+    IsCorrect: 0
+  - id: 44
+    answer: 27
+    IsCorrect: 1
+  - id: 44
+    answer: 33
+    IsCorrect: 0
+  - id: 45
+    answer: Suisse
+    IsCorrect: 0
+  - id: 45
+    answer: Espagne
+    IsCorrect: 0
+  - id: 45
+    answer: Royaume-Uni
+    IsCorrect: 0
   _questionTitle: {fileID: 1684834997}
   _resultText: {fileID: 0}
   _answerBtnPrefab: {fileID: 3061054017089007413, guid: 49e30624f82e3444f994af5b90a9a777, type: 3}

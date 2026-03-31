@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 7S
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: seven Spades
-  cardSprite: {fileID: 5094249290038607176, guid: 2a9b91564f69f77419a5961d3211a55c, type: 3}
+  cardSprite: {fileID: -8240209388742232121, guid: 4cbe1cc4e50ed79479a071f4c045c7d5, type: 3}
   cardId: 32
   suit: 3
   rank: 7

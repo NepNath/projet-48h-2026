@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 4C
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: four Clubs
-  cardSprite: {fileID: 5094249290038607176, guid: 2a9b91564f69f77419a5961d3211a55c, type: 3}
+  cardSprite: {fileID: 7714000861837260360, guid: 1da7538b2b9dfd14baff5979866a709c, type: 3}
   cardId: 42
   suit: 2
   rank: 4

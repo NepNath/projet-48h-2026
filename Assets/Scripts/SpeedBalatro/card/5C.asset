@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 5C
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: five Clubs
-  cardSprite: {fileID: 5094249290038607176, guid: 2a9b91564f69f77419a5961d3211a55c, type: 3}
+  cardSprite: {fileID: 4007296550245507558, guid: 2ba433c312752834ab99507885fee369, type: 3}
   cardId: 43
   suit: 2
   rank: 5

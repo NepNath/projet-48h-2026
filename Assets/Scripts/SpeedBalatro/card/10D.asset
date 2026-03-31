@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: 10D
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBalatro.Card
   cardName: ten Diamonds
-  cardSprite: {fileID: 5094249290038607176, guid: 2a9b91564f69f77419a5961d3211a55c, type: 3}
+  cardSprite: {fileID: 7480881454200429326, guid: a858cc8a3cfa89741aefbb9be962d0e1, type: 3}
   cardId: 22
   suit: 1
   rank: 10

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 8455cad7b4653234183324b8f172ed6e
+guid: bba6487f94f577846b50632b85c9e88a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1117371971350390685
-    second: Sprite - Pomme_0
+      213: -404150804112601952
+    second: Sprite_-_Bombe_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sprite - Pomme_0
+      name: Sprite_-_Bombe_0
       rect:
         serializedVersion: 2
-        x: 49
-        y: 44
-        width: 57
-        height: 77
+        x: 0
+        y: 0
+        width: 640
+        height: 640
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d97615a43e3b18f00800000000000000
-      internalID: 1117371971350390685
+      spriteID: 0ac0e252cfa246af0800000000000000
+      internalID: -404150804112601952
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Sprite - Pomme_0: 1117371971350390685
+      Sprite_-_Bombe_0: -404150804112601952
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

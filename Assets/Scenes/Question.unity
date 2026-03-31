@@ -1153,10 +1153,10 @@ MonoBehaviour:
     IsCorrect: 1
   - id: 36
     answer: "la mer m\xE9diterran\xE9e "
-    IsCorrect: 1
+    IsCorrect: 0
   - id: 36
     answer: la mer caspienne
-    IsCorrect: 1
+    IsCorrect: 0
   - id: 36
     answer: 'la mer morte '
     IsCorrect: 1

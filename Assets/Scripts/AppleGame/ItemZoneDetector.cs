@@ -5,6 +5,7 @@ public class ItemZoneDetector : MonoBehaviour
     public int applesInBasket;
     private Collider2D basketCollider;
     private bool finished;
+    private int lastApplesInBasket = 0;
 
     [Header("Settings")]
     public float timeLimit = 5f;
@@ -40,6 +41,14 @@ public class ItemZoneDetector : MonoBehaviour
             if (hit.CompareTag("Apple"))
                 applesInBasket++;
         }
+
+        // Play basket sound when a new apple is detected in the basket
+        if (applesInBasket > lastApplesInBasket)
+        {
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlayBasketSound();
+        }
+        lastApplesInBasket = applesInBasket;
 
         if (applesInBasket >= RandomAppleSpawner.MaxAppleForGoal)
         {

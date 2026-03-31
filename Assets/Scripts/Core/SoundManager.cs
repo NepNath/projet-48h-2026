@@ -16,12 +16,26 @@ public class SoundManager : MonoBehaviour
     public AudioClip miniGameMusic;
     public AudioClip gameOverMusic;
 
+    [Header("SFX Clips")]
+    public AudioClip appleBasketSound;
+    public AudioClip applePickSound;
+    public AudioClip chocolateBiteSound;
+    public AudioClip digitPressSound;
+    public AudioClip digitGoodSound;
+    public AudioClip digitWrongSound;
+    public AudioClip keycardValidateSound;
+
     [Header("Mixer")]
     public AudioMixer audioMixer;
 
+    [Header("SFX Settings")]
+    // Global multiplier applied to all SFX PlayOneShot volumeScale (use inspector to tweak)
+    public float sfxGlobalMultiplier = 1.5f;
+    // (debug flags removed)
+
     private bool miniGameMusicPlaying = false;
     private Coroutine fadeCoroutine;
-    private float fadeDuration = 0.5f; // seconds
+    private float fadeDuration = 0.5f;
 
     void Awake()
     {
@@ -35,10 +49,19 @@ public class SoundManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        // If we start on the main menu, ensure menu music plays immediately
         if (SceneManager.GetActiveScene().name == SceneFlow.MainMenuScene)
         {
             PlayMenuMusic();
+        }
+        if (musicSource != null && sfxSource != null && musicSource == sfxSource)
+        {
+            AudioSource newSfx = gameObject.AddComponent<AudioSource>();
+            newSfx.outputAudioMixerGroup = sfxSource.outputAudioMixerGroup;
+            newSfx.playOnAwake = false;
+            newSfx.loop = false;
+            newSfx.volume = sfxSource.volume;
+            newSfx.spatialBlend = sfxSource.spatialBlend;
+            sfxSource = newSfx;
         }
     }
 
@@ -47,7 +70,6 @@ public class SoundManager : MonoBehaviour
         if (musicSource == null) return;
         if (musicSource.clip != menuMusic)
         {
-            Debug.Log("[SoundManager] PlayMenuMusic requested");
             StartFadeToClip(menuMusic, true);
             miniGameMusicPlaying = false;
         }
@@ -58,7 +80,6 @@ public class SoundManager : MonoBehaviour
         if (musicSource == null) return;
         if (musicSource.clip != questionMusic)
         {
-            Debug.Log("[SoundManager] PlayQuestionMusic requested");
             StartFadeToClip(questionMusic, true);
             miniGameMusicPlaying = false;
         }
@@ -69,7 +90,6 @@ public class SoundManager : MonoBehaviour
         if (musicSource == null) return;
         if (!miniGameMusicPlaying)
         {
-            Debug.Log("[SoundManager] PlayMiniGameMusic requested");
             StartFadeToClip(miniGameMusic, true);
             miniGameMusicPlaying = true;
         }
@@ -80,10 +100,8 @@ public class SoundManager : MonoBehaviour
         if (musicSource == null) return;
         if (gameOverMusic == null)
         {
-            Debug.LogWarning("[SoundManager] PlayGameOverMusic requested but no clip assigned.");
             return;
         }
-        Debug.Log("[SoundManager] PlayGameOverMusic requested");
         StartFadeToClip(gameOverMusic, true);
         miniGameMusicPlaying = false;
     }
@@ -97,9 +115,23 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySFX(AudioClip clip)
     {
-        if (sfxSource == null || clip == null) return;
-        sfxSource.PlayOneShot(clip);
+        PlaySFX(clip, 1f);
     }
+
+    public void PlaySFX(AudioClip clip, float volumeScale)
+    {
+        if (sfxSource == null || clip == null) return;
+        float finalScale = Mathf.Clamp(volumeScale * sfxGlobalMultiplier, 0f, 3f);
+        sfxSource.PlayOneShot(clip, finalScale);
+    }
+
+    public void PlayBasketSound() { PlaySFX(appleBasketSound); }
+    public void PlayFruitPickSound() { PlaySFX(applePickSound); }
+    public void PlayChocolateBite() { PlaySFX(chocolateBiteSound); }
+    public void PlayDigitPress() { PlaySFX(digitPressSound); }
+    public void PlayDigitGood() { PlaySFX(digitGoodSound); }
+    public void PlayDigitWrong() { PlaySFX(digitWrongSound); }
+    public void PlayKeycardValidate() { PlaySFX(keycardValidateSound); }
 
     public void SetMusicVolume(float volume)
     {
@@ -111,16 +143,17 @@ public class SoundManager : MonoBehaviour
 
     public void SetSFXVolume(float volume)
     {
+        float safeVol = Mathf.Max(volume, 0.0001f);
         if (audioMixer != null)
-            audioMixer.SetFloat("SFXVolume", Mathf.Log10(Mathf.Clamp01(volume)) * 20f);
+            audioMixer.SetFloat("SFXVolume", Mathf.Log10(safeVol) * 20f);
         else if (sfxSource != null)
-            sfxSource.volume = Mathf.Clamp01(volume);
+            sfxSource.volume = Mathf.Clamp(volume, 0f, 2f);
     }
 
     private void StartFadeToClip(AudioClip newClip, bool loop)
     {
         if (musicSource == null) return;
-        Debug.Log($"[SoundManager] StartFadeToClip -> { (newClip!=null?newClip.name:"null") }");
+        
         if (fadeCoroutine != null)
             StopCoroutine(fadeCoroutine);
         fadeCoroutine = StartCoroutine(FadeToClipCoroutine(newClip, loop));

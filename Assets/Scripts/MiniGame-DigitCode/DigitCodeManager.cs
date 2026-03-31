@@ -54,6 +54,8 @@ public class DigitCodeManager : MonoBehaviour
 
         playerInput += digit.ToString();
         UpdateUI();
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayDigitPress();
         if (playerInput.Length == 4)
         {
             CheckCode();
@@ -74,10 +76,14 @@ public class DigitCodeManager : MonoBehaviour
         if (!gameActive) return;
         if (playerInput == secretCode)
         {
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlayDigitGood();
             EndGame(true);
         }
         else
         {
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlayDigitWrong();
             resultText.text = "NOPE";
             playerInput = "";
             UpdateUI();

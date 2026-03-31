@@ -16,6 +16,12 @@ public static class SceneFlow
 
     public static string StartRun()
     {
+        if (HealthManager.Instance == null)
+        {
+            var go = new GameObject("HealthManager");
+            go.AddComponent<HealthManager>();
+        }
+
         ResetRun();
         HealthManager.Instance?.ResetHealth();
         return PickMiniGame();
@@ -30,6 +36,10 @@ public static class SceneFlow
         else
         {
             HealthManager.Instance?.LoseLife();
+            if (HealthManager.Instance != null && HealthManager.Instance.GetCurrentLives() <= 0)
+            {
+                return GameOverScene;
+            }
             return PickMiniGame();
         }
     }

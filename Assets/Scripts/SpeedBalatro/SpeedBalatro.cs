@@ -12,7 +12,6 @@ namespace SpeedBalatro
         {
             public HandType handType;
             public float chips;
-            public int mult;
             public float totalScore;
         }
 
@@ -173,24 +172,6 @@ namespace SpeedBalatro
 
             return maxScore;
         }
-        private int GetHandMultiplier(HandType handType)
-        {
-            return handType switch
-            {
-                HandType.HighCard => 1,
-                HandType.Pair => 2,
-                HandType.TwoPair => 2,
-                HandType.ThreeOfAKind => 3,
-                HandType.Straight => 4,
-                HandType.Flush => 4,
-                HandType.FullHouse => 4,
-                HandType.FourOfAKind => 7,
-                HandType.StraightFlush => 8,
-                HandType.RoyalFlush => 8,
-                _ => 1
-            };
-        }
-
         private float GetHandBaseChips(HandType handType)
         {
             return handType switch
@@ -349,14 +330,12 @@ namespace SpeedBalatro
                 {
                     handType = HandType.HighCard,
                     chips = 0,
-                    mult = 0,
                     totalScore = 0
                 };
             }
 
             HandType handType = EvaluateHandType(cards);
             float baseChips = GetHandBaseChips(handType);
-            int mult = GetHandMultiplier(handType);
 
             Card[] scoringCards = GetScoringCards(cards, handType);
             float cardChips = 0f;
@@ -371,8 +350,7 @@ namespace SpeedBalatro
             {
                 handType = handType,
                 chips = totalChips,
-                mult = mult,
-                totalScore = totalChips * mult
+                totalScore = totalChips
             };
         }
 

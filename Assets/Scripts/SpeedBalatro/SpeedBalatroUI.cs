@@ -14,8 +14,6 @@ namespace SpeedBalatro
         [SerializeField] private TextMeshProUGUI targetScoreText;
         [SerializeField] private TextMeshProUGUI currentScoreText;
         [SerializeField] private TextMeshProUGUI handTypeLabel;
-        [SerializeField] private TextMeshProUGUI chipsLabel;
-        [SerializeField] private TextMeshProUGUI multLabel;
 
         [Header("Hand Display")]
         [SerializeField] private GameObject handContainer;
@@ -47,7 +45,6 @@ namespace SpeedBalatro
         {
             SpeedBalatroEvents.OnTimerUpdated += UpdateTimerUI;
             SpeedBalatroEvents.OnNewHandDealt += DisplayNewHand;
-            SpeedBalatroEvents.OnScoreUpdated += UpdateCurrentScoreUI;
             SpeedBalatroEvents.OnHandScoreInfoUpdated += UpdateHandDisplay;
             SpeedBalatroEvents.OnTargetScoreChanged += UpdateTargetScoreUI;
             SpeedBalatroEvents.OnGameWon += HandleGameWon;
@@ -58,7 +55,6 @@ namespace SpeedBalatro
         {
             SpeedBalatroEvents.OnTimerUpdated -= UpdateTimerUI;
             SpeedBalatroEvents.OnNewHandDealt -= DisplayNewHand;
-            SpeedBalatroEvents.OnScoreUpdated -= UpdateCurrentScoreUI;
             SpeedBalatroEvents.OnHandScoreInfoUpdated -= UpdateHandDisplay;
             SpeedBalatroEvents.OnTargetScoreChanged -= UpdateTargetScoreUI;
             SpeedBalatroEvents.OnGameWon -= HandleGameWon;
@@ -75,8 +71,7 @@ namespace SpeedBalatro
 
             if (gameOverPanel != null) gameOverPanel.SetActive(false);
             if (handTypeLabel != null) handTypeLabel.text = "";
-            if (chipsLabel != null) chipsLabel.text = "0";
-            if (multLabel != null) multLabel.text = "x0";
+            if (currentScoreText != null) currentScoreText.text = "";
             if (submitButton != null)
             {
                 submitButton.interactable = false;
@@ -124,14 +119,13 @@ namespace SpeedBalatro
             if (info.totalScore == 0)
             {
                 handTypeLabel.text = "";
-                chipsLabel.text = "0";
-                multLabel.text = "x0";
+                UpdateCurrentScoreUI(info.totalScore);
+                
             }
             else
             {
                 handTypeLabel.text = info.handType.ToString();
-                chipsLabel.text = info.chips.ToString();
-                multLabel.text = $"x{info.mult}";
+                UpdateCurrentScoreUI(info.totalScore);
             }
         }
 

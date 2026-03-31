@@ -187,7 +187,7 @@ namespace SpeedBalatro
                 if (buttonText != null)
                 {
                     buttonText.text = selectedCount > 0 ?
-                        $"Submit Hand ({selectedCount})" : "Select Cards";
+                        $"Submit Hand" : "Select Cards";
                 }
             }
         }

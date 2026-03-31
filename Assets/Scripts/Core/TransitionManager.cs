@@ -61,6 +61,19 @@ public class TransitionManager : MonoBehaviour
             Instance = go.AddComponent<TransitionManager>();
         }
 
+        // Ensure SoundManager plays appropriate music for the target scene immediately
+        if (SoundManager.Instance != null)
+        {
+            if (sceneName == SceneFlow.MainMenuScene)
+                SoundManager.Instance.PlayMenuMusic();
+            else if (sceneName == SceneFlow.QuestionScene)
+                SoundManager.Instance.PlayQuestionMusic();
+            else if (sceneName == SceneFlow.GameOverScene)
+                SoundManager.Instance.PlayGameOverMusic();
+            else
+                SoundManager.Instance.PlayMiniGameMusic();
+        }
+
         Instance.StartCoroutine(Instance.LoadRoutine(sceneName));
     }
 

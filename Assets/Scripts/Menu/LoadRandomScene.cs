@@ -22,6 +22,8 @@ public class LoadRandomScene : MonoBehaviour
     public void loadMenuScene()
     {
         SceneFlow.ResetRun();
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayMenuMusic();
         TransitionManager.LoadScene(menuScene);
     }
 }

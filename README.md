@@ -73,5 +73,5 @@ With the help of :
  * **PayExe** [itch.io](https://PayExe.itch.io/) · [GitHub](https://github.com/PayExe) - Developper
  * **Huldraine** [itch.io](https://Huldraine.itch.io/) · [GitHub](https://github.com/Huldraine) - Developper
  * **poketoto45** [itch.io](https://poketoto45.itch.io/) · [GitHub](https://github.com/poketoto45) - Developper
- * **Goult** [itch.io](https://goult280.itch.io/) · [GitHub](https://github.com/maximepoujol1-dot)
+ * **Goult** [itch.io](https://goult280.itch.io/) · [GitHub](https://github.com/maximepoujol1-dot) - Developper
 

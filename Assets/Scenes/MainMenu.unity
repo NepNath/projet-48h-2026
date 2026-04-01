@@ -392,6 +392,7 @@ MonoBehaviour:
   digitGoodSound: {fileID: 8300000, guid: 8d179242d30f43f4288dc631ef33dab5, type: 3}
   digitWrongSound: {fileID: 8300000, guid: 8062038dbd17da6499838634df6281c0, type: 3}
   keycardValidateSound: {fileID: 8300000, guid: 79f5815153de8d4488e392e26e488d1a, type: 3}
+
   audioMixer: {fileID: 0}
   sfxGlobalMultiplier: 3
   debugSFX: 1

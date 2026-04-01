@@ -2,6 +2,12 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
+.ai/
+.idea/
+
+*.csproj
+
+
 .utmp/
 /[Ll]ibrary/
 /[Tt]emp/

@@ -1,8 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 
 public class cable_game : MonoBehaviour

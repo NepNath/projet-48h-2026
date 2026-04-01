@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LoadRandomScene : MonoBehaviour
 {
@@ -23,6 +24,11 @@ public class LoadRandomScene : MonoBehaviour
     {
         SceneFlow.ResetRun();
         TransitionManager.LoadScene(menuScene);
+    }
+
+    public void loadSettingsScene()
+    {
+        SceneManager.LoadScene("Settings");
     }
 }
 

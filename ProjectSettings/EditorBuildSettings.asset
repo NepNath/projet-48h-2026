@@ -27,9 +27,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Perdu.unity
     guid: ca6d67f0634a99b4ba343796993d5008
   - enabled: 1
+    path: Assets/Scenes/Settings.unity
+    guid: bc77e410de7447b439f3924bf6a6275b
+  - enabled: 0
     path: Assets/Scenes/KeyCard.unity
     guid: 00000000000000000000000000000000
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/DigitCode.unity
     guid: 00000000000000000000000000000000
   m_configObjects:

@@ -15,6 +15,8 @@ public class Draggable : MonoBehaviour
     {
         isDragging = true;
         offset = (Vector2)transform.position - GetMousePosition();
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayFruitPickSound();
     }
 
     void OnMouseUp()

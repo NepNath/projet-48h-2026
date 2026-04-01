@@ -50,6 +50,8 @@ public class GestionnaireChoco : MonoBehaviour
         {
             indexActuel++; 
             imageDuBouton.sprite = etapesChocolat[indexActuel];
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlayChocolateBite();
         }
         else
         {

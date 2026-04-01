@@ -87,6 +87,8 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
         if (distance <= successDistance)
         {
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlayKeycardValidate();
             EndGame(true);
         }
         else

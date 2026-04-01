@@ -16,7 +16,6 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private Vector2 startPosition;
     private float timeLeft;
     private bool gameActive = false;
-    private bool isDragging = false;
     private Canvas canvas;
     void Start()
     {
@@ -41,7 +40,6 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         card.anchoredPosition = startPosition;
         timeLeft = timeLimit;
         gameActive = true;
-        isDragging = false;
         resultText.text = "";
     }
 
@@ -60,7 +58,6 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (!gameActive) return;
-        isDragging = true;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -79,7 +76,6 @@ public class KeyCardManager : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void OnEndDrag(PointerEventData eventData)
     {
         if (!gameActive) return;
-        isDragging = false;
 
         float distance = Vector2.Distance(card.anchoredPosition, reader.anchoredPosition);
 

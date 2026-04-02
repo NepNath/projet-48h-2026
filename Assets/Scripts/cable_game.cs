@@ -1,4 +1,4 @@
-    using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -78,7 +78,7 @@ public class cable_game : MonoBehaviour
         }
     }
 
-    void onButtonClicked(int index)
+    public void onButtonClicked(int index)
     {
         int pairIndex = index / 2;
         int firstButton = pairIndex * 2;

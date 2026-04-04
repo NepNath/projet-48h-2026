@@ -68,7 +68,7 @@ Project lead by **NepNath** — [itch.io](https://nepnath.itch.io/) · [GitHub](
 
 With the help of : 
  * **Sika6K** [itch.io](https://sika6k.itch.io/) · [GitHub](https://github.com/sSika6K) - Sound Designer - Developper
- * **yokasashi** [itch.io](https://yokasashi.itch.io/) · [GitHub](https://github.com/Yokasashii) - Lead Artist 
+ * **Yokasashi** [itch.io](https://yokasashi.itch.io/) · [GitHub](https://github.com/Yokasashii) - Lead Artist 
  * **SkyVence** [itch.io](https://SkyVence.itch.io/) · [GitHub](https://github.com/SkyVence) - Developper
  * **PayExe** [itch.io](https://PayExe.itch.io/) · [GitHub](https://github.com/PayExe) - Developper
  * **Huldraine** [itch.io](https://Huldraine.itch.io/) · [GitHub](https://github.com/Huldraine) - Developper
